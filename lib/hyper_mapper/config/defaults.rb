@@ -1,5 +1,9 @@
 module HyperMapper
   module Config
+    
+    def config
+      defaults
+    end
 
     def defaults
       @defauts ||= load_defaults
