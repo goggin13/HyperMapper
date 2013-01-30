@@ -7,7 +7,7 @@ An object relation mapper in Ruby for the
 
 Add this line to your application's Gemfile:
 
-    gem 'active-dex'
+    gem 'hyper-mapper'
 
 And then execute:
 
@@ -15,7 +15,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install active-dex
+    $ gem install hyper-mapper
 
 ## Usage
 
