@@ -1,7 +1,7 @@
 # HyperMapper
 
-An object relation mapper in Ruby for the
-[HyperDex](http://hyperdex.org), a searchable distributed key-value store
+An object relational mapper for
+[HyperDex](http://hyperdex.org), a searchable distributed key-value store, written in Ruby.
 
 ## Installation
 
