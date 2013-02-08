@@ -2,7 +2,7 @@
 class User
   include HyperMapper::Document
 
-  key :username
+  attribute :username, key: true
   attribute :email
 
 end

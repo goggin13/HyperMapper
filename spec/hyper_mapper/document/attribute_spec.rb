@@ -16,7 +16,6 @@ describe 'HyperMapper::Document::Attribute' do
     
     before do
       class AttributeTestClass
-        include HyperMapper::Document
         attribute :field_name
       end
       @instance = AttributeTestClass.new

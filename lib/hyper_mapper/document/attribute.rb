@@ -3,7 +3,12 @@
 module HyperMapper
   module Document
     module ClassMethods
+      attr_writer :key_name
       
+      def key_name
+        @key_name ? @key_name.to_sym : nil
+      end
+
       def attributes_map 
         @attributes_map ||= {}
       end
@@ -15,6 +20,10 @@ module HyperMapper
       def attribute(name, params={})
         
         create_attribute(name, params) 
+        
+        if (params.has_key? :key) && params[:key]
+          self.key_name = name
+        end
 
         define_method "#{name}=" do |val|
           set_attribute_value name, val
@@ -23,10 +32,6 @@ module HyperMapper
         define_method "#{name}" do
           get_attribute_value name
         end
-      end
-
-      def key(params={})
-
       end
     end
     
