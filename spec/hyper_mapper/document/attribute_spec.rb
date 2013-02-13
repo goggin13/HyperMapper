@@ -50,6 +50,18 @@ describe 'HyperMapper::Document::Attribute' do
       end
     end
   end
+
+  describe "space_name" do
+
+    it "should default to the plural class name" do
+      AttributeTestClass.space_name.should == 'attribute_test_classes'
+    end
+    
+    it "should respect and overriden value" do
+      AttributeTestClass.space_name = 'overriden'
+      AttributeTestClass.space_name.should == 'overriden'
+    end
+  end
 end
 
 

@@ -17,27 +17,11 @@ describe 'HyperMapper::Persistence' do
       User.create! username: 'goggin',
                    email: 'matt@example.com'
     end
-  end
 
-  describe "space" do
-
-    before do
-      class AttributeTestClass
-        include HyperMapper::Document
-      end
-    end
-  
-    after do
-      Object.send(:remove_const, :AttributeTestClass)
-    end
-
-    it "should default to the plural class name" do
-      AttributeTestClass.space_name.should == 'attribute_test_classes'
-    end
-    
-    it "should respect and overriden value" do
-      AttributeTestClass.space_name = 'overriden'
-      AttributeTestClass.space_name.should == 'overriden'
+    xit "should raise an error for invalid input" do
+      expect {
+        User.create! email: 'matt@example.com'
+      }.should raise_error HyperMapper::Exceptions::NullKeyException
     end
   end
 end
