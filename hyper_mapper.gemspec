@@ -19,5 +19,6 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency 'activerecord', '~> 3.2.11'
   gem.add_dependency 'activesupport', '~> 3.2.11'
+  gem.add_dependency 'activemodel', '~> 3.2.11'
   gem.add_development_dependency 'rspec', '~> 2.12'
 end

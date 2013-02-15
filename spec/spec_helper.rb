@@ -21,3 +21,8 @@ end
 RSpec.configure do |config|
   config.mock_with :rspec
 end
+
+def stub_client
+  client = double('client')
+  HyperMapper::Config.client = client
+end

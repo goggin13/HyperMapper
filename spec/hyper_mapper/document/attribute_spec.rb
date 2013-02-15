@@ -5,6 +5,8 @@ describe 'HyperMapper::Document::Attribute' do
   before do
     class AttributeTestClass
       include HyperMapper::Document
+      attribute :field_name
+      attribute :key_name, key: true
     end
   end
 
@@ -15,16 +17,14 @@ describe 'HyperMapper::Document::Attribute' do
   describe "attribute" do
     
     before do
-      class AttributeTestClass
-        attribute :field_name
-      end
       @instance = AttributeTestClass.new
     end
     
     describe "setter" do
 
-      it "should create a setter on an instance" do
+      it "should create a setter and a getter on an instance" do
         @instance.should respond_to(:field_name=)
+        @instance.should respond_to(:field_name)
       end
 
       it "should set the fields value" do
@@ -60,6 +60,17 @@ describe 'HyperMapper::Document::Attribute' do
     it "should respect and overriden value" do
       AttributeTestClass.space_name = 'overriden'
       AttributeTestClass.space_name.should == 'overriden'
+    end
+  end
+
+  describe "key_name" do
+    
+    it "should equal the attribute denoted as the key" do
+      AttributeTestClass.key_name.should == :key_name
+    end
+
+    it "should should validate presence of the key" do
+      AttributeTestClass.new(field_name: "test").should_not be_valid
     end
   end
 end
