@@ -31,14 +31,9 @@ module HyperMapper
     private 
       
       def persist
-        key = attribute_values_map[self.class.key_name]
-        if key
-          attrs = attribute_values_map_raw
-          attrs.delete self.class.key_name
-          HyperMapper::Config.client.put(self.class.space_name,
-                                        key.value, 
-                                        attrs)
-        end
+        attrs = attribute_values_map_raw
+        key = attrs.delete self.class.key_name
+        HyperMapper::Config.client.put(self.class.space_name, key, attrs) if key
       end
   end
 end

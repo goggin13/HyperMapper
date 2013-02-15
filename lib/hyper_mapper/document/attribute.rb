@@ -44,9 +44,6 @@ module HyperMapper
         @name = name
         @options = options
       end
-      def value
-        
-      end
     end
 
     class AttributeValue
