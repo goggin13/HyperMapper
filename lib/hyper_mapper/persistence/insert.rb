@@ -10,13 +10,35 @@ module HyperMapper
       end
 
       def create(params={})
-        key = params.delete key_name
-        HyperMapper::Config.client.put(space_name, key, params)
+        self.new(params).save
       end
       
       def create!(params={})
-        create(params)
+        self.new(params).save!
       end 
     end
+  
+    def save
+      persist if valid?
+      self
+    end
+
+    def save!
+      persist
+      self
+    end
+
+    private 
+      
+      def persist
+        key = attribute_values_map[self.class.key_name]
+        if key
+          attrs = attribute_values_map_raw
+          attrs.delete self.class.key_name
+          HyperMapper::Config.client.put(self.class.space_name,
+                                        key.value, 
+                                        attrs)
+        end
+      end
   end
 end

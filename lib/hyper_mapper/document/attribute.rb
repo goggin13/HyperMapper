@@ -3,10 +3,14 @@
 module HyperMapper
   module Document
     module ClassMethods
-      attr_writer :key_name
       
       def key_name
         @key_name ? @key_name.to_sym : nil
+      end
+
+      def key_name=(v)
+        @key_name = v
+        validates_presence_of v
       end
 
       def attributes_map 
@@ -40,6 +44,9 @@ module HyperMapper
         @name = name
         @options = options
       end
+      def value
+        
+      end
     end
 
     class AttributeValue
@@ -52,6 +59,17 @@ module HyperMapper
     
     def attribute_values_map
       @attribute_values ||= {}
+    end
+
+    def attribute_values_map_raw
+      attribute_values_map.inject({}) do |acc, (key, field)|
+        acc[key] = (field ? field.value : nil)
+        acc
+      end
+    end
+    
+    def read_attribute_for_validation(key)
+      attribute_values_map_raw[key]
     end
 
     def set_attribute_value(name, val)
