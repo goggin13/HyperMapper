@@ -74,6 +74,3 @@ describe 'HyperMapper::Document::Attribute' do
     end
   end
 end
-
-
-

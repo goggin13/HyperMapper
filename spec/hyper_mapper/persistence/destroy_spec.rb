@@ -15,4 +15,3 @@ describe 'HyperMapper::Persistence.destroy' do
     end
   end
 end
-
