@@ -27,6 +27,10 @@ module HyperMapper
       persist
       self
     end
+    
+    def key_value
+      attribute_values_map_raw[self.class.key_name]
+    end
 
     private 
       
