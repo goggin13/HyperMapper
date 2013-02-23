@@ -8,8 +8,6 @@ describe 'HyperMapper::Document::Finders' do
       attribute :field_1, key: true
       attribute :field_2
     end
-    @instance = FinderTestClass.create! field_1: "test",
-                                        field_2: "hello"
   end
 
   before do

@@ -10,11 +10,11 @@ module HyperMapper
     end
 
     def default_config_path
-      "lib/hyper_mapper/config/config.yml"
+      "/home/goggin/projects/rails/hyper_mapper/lib/hyper_mapper/config/config.yml"
     end
 
     def load_defaults
-      YAML.load(ERB.new(File.read(default_config_path)).result)
+      YAML.load(File.read(default_config_path))
     end
   end
 end

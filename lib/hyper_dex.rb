@@ -1,3 +1,5 @@
+require 'hyperclient'
+
 module HyperDex
 
   class Client
@@ -5,10 +7,19 @@ module HyperDex
     def initialize(options)
       @address = options['host']
       @port = options['port']
+      @client = HyperClient.new @address, @port
     end
 
-    def get(space, key) end
-    def put(space, key, attrs) end
+    def get(space, key) 
+      @client.get space, key
+    end
+
+    def put(space, key, attrs) 
+      puts attrs
+      formatted = attrs.map { |k,v| [k.to_s, v.to_s] }
+      @client.put space, key, formatted 
+    end
+
     def cond_put(space, key, condition, attrs) end
     def delete(space, key) end
     def search(space, predicate) end
@@ -68,5 +79,20 @@ module HyperDex
     def async_map_string_append(space, key, value) end
     def async_set_union(space, key, value) end
     def loop() end
+    def create_space
+       cmd = '/home/goggin/projects/install/bin/hyperdex '
+       cmd += 'add-space '
+       cmd += "space #{space_name} "
+       cmd += "key #{keyname} "
+       cmd += "attributes "
+       cmd += "subspace "
+       cmd += "tolerate 2 failures"
+       system(cmd)
+    end
+
+    def destroy_space
+      cmd = '/home/goggin/projects/install/bin/hyperdex '
+      cmd += "rm-space #{space_name}"
+    end
   end
 end
