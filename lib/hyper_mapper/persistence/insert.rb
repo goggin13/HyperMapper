@@ -16,6 +16,23 @@ module HyperMapper
       def create!(params={})
         self.new(params).save!
       end 
+
+      def create_space
+        cmd = '/home/goggin/projects/install/bin/hyperdex '
+        cmd += 'add-space '
+        cmd += "space #{space_name} "
+        cmd += "key #{keyname} "
+        cmd += "attributes "
+        cmd += "subspace "
+        cmd += "tolerate 2 failures"
+        system(cmd)
+      end
+
+      def destroy_space
+        cmd = '/home/goggin/projects/install/bin/hyperdex '
+        cmd += "rm-space #{space_name}"
+      end
+
     end
   end
 end

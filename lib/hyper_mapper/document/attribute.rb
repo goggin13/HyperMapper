@@ -20,6 +20,10 @@ module HyperMapper
       def create_attribute(name, params)
         attributes_map[name] = Attribute.new(name, params)
       end
+      
+      def key(name, params={})
+        attribute name, params.merge(key: true)
+      end
 
       def attribute(name, params={})
         
