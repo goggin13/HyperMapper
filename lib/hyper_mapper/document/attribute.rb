@@ -70,7 +70,11 @@ module HyperMapper
       
       self.class.embedded_classes.each do |children|
         child_attrs = self.send(children).to_a
-        attrs[children] = child_attrs unless child_attrs.length == 0
+        if child_attrs.length > 0
+          attrs[children] = child_attrs
+        else
+          attrs.delete children
+        end
       end
 
       attrs

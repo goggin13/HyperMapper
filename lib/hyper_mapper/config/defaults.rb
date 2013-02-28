@@ -2,7 +2,7 @@ module HyperMapper
   module Config
     
     def config
-      defaults
+      @config || defaults
     end
 
     def defaults
@@ -12,9 +12,13 @@ module HyperMapper
     def default_config_path
       "lib/hyper_mapper/config/config.yml"
     end
+    
+    def load_from_file(path)
+      @config = YAML.load(File.read(path))
+    end
 
     def load_defaults
-      YAML.load(File.read(default_config_path))
+      load_from_file default_config_path
     end
   end
 end

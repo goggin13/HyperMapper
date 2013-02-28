@@ -12,7 +12,7 @@ describe 'HyperMapper::Persistence' do
       @client.should_receive(:put)
              .with('users', 
                    'goggin',
-                   {email: 'matt@example.com'})
+                   {email: 'matt@example.com', posts: '[]'})
       User.create! username: 'goggin',
                    email: 'matt@example.com'
     end
@@ -24,7 +24,7 @@ describe 'HyperMapper::Persistence' do
       @client.should_receive(:put)
              .with('users', 
                    'goggin',
-                   {email: 'matt@example.com'})
+                   {email: 'matt@example.com', posts: '[]'})
       User.create username: 'goggin',
                   email: 'matt@example.com'
     end

@@ -59,7 +59,7 @@ describe 'HyperMapper::Document::Finders' do
       it "should return the matching object" do
         @client.should_receive(:get)
                .with('finder_test_classes', 'test')
-               .and_return({field_1: "test", field_2: "hello"})
+               .and_return({field_2: "hello"})
         result = FinderTestClass.find('test')
         result.should be_a FinderTestClass
         result.field_1.should == 'test'

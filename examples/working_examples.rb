@@ -2,20 +2,35 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), "..", "lib")) 
 require '/home/goggin/projects/rails/hyper_mapper/lib/hyper_mapper'
 
+path = "/home/goggin/projects/rails/hyper_mapper/examples/config.yml"
+HyperMapper::Config.load_from_file path
+
+class Post
+  include HyperMapper::Document
+
+  key :id
+  attribute :title
+  attribute :content
+
+  embedded_in :user
+end
+
 class User
   include HyperMapper::Document
 
   key :username
   attribute :first
   attribute :last
+
+  embeds_many :posts
 end
 
 create = <<-BASH
 /home/goggin/projects/install/bin/hyperdex add-space <<EOF
 space users 
 key username
-attributes first, last
-subspace first, last
+attributes first, last, posts
+subspace first, last, posts
 tolerate 2 failures
 EOF
 BASH
@@ -31,5 +46,24 @@ puts user.first
 puts user.last
 
 user.first = 'george'
-user.save!
+user.save
 puts User.find('goggin13').first
+
+post = Post.new id: 1, title: "hello world", content: "safsafd"
+user.posts << post
+puts post
+post.save
+
+post = User.find('goggin13').posts.first
+puts post.title
+puts post.content
+
+post.title = "a new title!"
+post.save
+
+puts User.find('goggin13').posts.first.title
+
+destroy = <<-BASH
+/home/goggin/projects/install/bin/hyperdex rm-space users
+BASH
+system destroy

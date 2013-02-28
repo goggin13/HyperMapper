@@ -10,7 +10,7 @@ describe 'HyperMapper::Persistence' do
     
     it "should pass the correct arguments to the hyperdex-client" do
       @client.should_receive(:put)
-             .with('users', 'goggin', {email: 'matt@example.com'})
+             .with('users', 'goggin', {email: 'matt@example.com', posts: '[]'})
       user = User.new username: 'goggin', email: 'matt@example.com'
       user.save
     end
@@ -22,7 +22,7 @@ describe 'HyperMapper::Persistence' do
       user = User.find('goggin')
       user.email = 'george@example.com'
       @client.should_receive(:put)
-             .with('users', 'goggin', {email: 'george@example.com'})
+             .with('users', 'goggin', {email: 'george@example.com', posts: '[]'})
       user.save
       user.email.should == 'george@example.com'
     end

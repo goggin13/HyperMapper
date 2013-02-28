@@ -4,7 +4,10 @@ module HyperMapper
     
     def find(key)
       result = HyperMapper::Config.client.get(space_name, key)
-      return load_from_attrs(result) if result
+      if result
+        result[key_name] = key
+        return load_from_attrs(result) 
+      end
 
       nil
     end

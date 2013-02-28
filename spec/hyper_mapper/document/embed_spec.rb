@@ -32,6 +32,21 @@ describe 'HyperMapper::Document::Embed' do
       @user.posts[0].title.should == 'Hello world'
       @user.posts[1].title.should == 'Goodbye world'
     end
+
+    it "should be able to be added to" do
+      post = Post.new id: 3, title: "test"
+      @user.posts << post
+      @user.posts.length.should == 3
+      @user.posts.find(3).user.username.should == @user.username
+    end
+
+    it "should return the first item" do
+      @user.posts.first.title.should == 'Hello world'
+    end
+
+    it "should offer a find method" do
+      @user.posts.find(2).title.should == 'Goodbye world'
+    end
   end
 
   describe "embedded_in" do
@@ -73,13 +88,11 @@ describe 'HyperMapper::Document::Embed' do
     it "should persist the parent object" do
       @post.title = 'a new title'
       @user.email = 'new@example.com'
+      post_json = [{title: 'a new title', id: '1'}.to_json, {title: 'Goodbye world', id: '2'}.to_json].to_json
       @client.should_receive(:put)
              .with('users', 'goggin13',
                    {email: 'new@example.com',
-                    posts: [
-                     {title: 'a new title', id: 1},
-                     {title: 'Goodbye world', id: 2}
-                   ]})
+                    posts: post_json})
       @post.save
     end
   end  

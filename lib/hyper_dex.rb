@@ -1,4 +1,5 @@
 #require 'hyperclient'
+require 'hyperclient'
 
 module HyperDex
 
@@ -7,7 +8,7 @@ module HyperDex
     def initialize(options)
       @address = options['host']
       @port = options['port']
-      #@client = HyperClient.new @address, @port
+      @client = HyperClient.new @address, @port
     end
 
     def get(space, key) 

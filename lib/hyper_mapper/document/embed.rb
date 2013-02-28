@@ -1,4 +1,4 @@
-
+require 'json'
 
 module HyperMapper
   module Document
@@ -6,12 +6,22 @@ module HyperMapper
     class EmbeddedCollection
       def initialize(options={})
         @klass = options[:class]
-        children_hash = options[:values] ? options[:values].value : {}
-        @elements = children_hash.inject({}) do |acc, attrs|
-          child = @klass.load_from_attrs attrs
-          acc[child.key_value] = child
-          child.parent = options[:parent]
-          acc
+        @parent = options[:parent]
+
+        children_hash = options[:values] ? options[:values].value : "[]"
+        children_hash ||= []
+        if children_hash.is_a? String
+          children_hash = JSON.load children_hash 
+        end
+
+        @elements = {}
+        children_hash.each do |attrs|
+          if attrs.is_a? String
+            add_from_json attrs
+          else
+            child = @klass.load_from_attrs attrs
+            self.<< child
+          end
         end
       end
 
@@ -23,13 +33,47 @@ module HyperMapper
         @elements[id]
       end
 
+      def <<(item)
+        @elements[item.key_value] = item
+        item.parent = @parent
+      end
+
+      def length
+        @elements.length
+      end
+
+      def first
+        self[0]
+      end
+
       def to_a
         @elements.map do |k, child|
-          attrs = child.attribute_values_map_raw
-          attrs.delete child.parent_name
-          attrs
-        end
+          child.to_json
+        end.to_json
       end
+
+      def add_from_json(json)
+        self.<< from_json!(json)
+      end
+
+      def from_json!(string)
+        instance = @klass.new
+        JSON.load(string).each do |attr, val| 
+          instance.send("#{attr}=", val)
+        end
+        instance
+      end
+    end
+
+    def to_json
+      hash = attribute_values_map.inject({}) do |acc, (k, attr)|
+        acc[attr.name] = attr.value.to_s
+        acc
+      end
+     
+      hash.delete parent_name
+
+      hash.to_json
     end
 
     module ClassMethods
