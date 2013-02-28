@@ -1,4 +1,4 @@
-require 'hyperclient'
+#require 'hyperclient'
 
 module HyperDex
 
@@ -7,7 +7,7 @@ module HyperDex
     def initialize(options)
       @address = options['host']
       @port = options['port']
-      @client = HyperClient.new @address, @port
+      #@client = HyperClient.new @address, @port
     end
 
     def get(space, key) 
@@ -15,7 +15,6 @@ module HyperDex
     end
 
     def put(space, key, attrs) 
-      puts attrs
       formatted = attrs.map { |k,v| [k.to_s, v.to_s] }
       @client.put space, key, formatted 
     end

@@ -1,4 +1,5 @@
 require 'hyper_mapper/document/attribute' 
+require 'hyper_mapper/document/embed' 
 require 'hyper_mapper/finders'
 require 'active_model'
 
@@ -9,7 +10,6 @@ module HyperMapper
       mod.send(:extend, HyperMapper::Finders)
       mod.send(:include, HyperMapper::Persistence)
       mod.send(:include, ActiveModel::Validations)
-
     end
 
     def initialize(params={})

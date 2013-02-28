@@ -63,10 +63,17 @@ module HyperMapper
     end
 
     def attribute_values_map_raw
-      attribute_values_map.inject({}) do |acc, (key, field)|
+      attrs = attribute_values_map.inject({}) do |acc, (key, field)|
         acc[key] = (field ? field.value : nil)
         acc
       end
+      
+      self.class.embedded_classes.each do |children|
+        child_attrs = self.send(children).to_a
+        attrs[children] = child_attrs unless child_attrs.length == 0
+      end
+
+      attrs
     end
     
     def read_attribute_for_validation(key)

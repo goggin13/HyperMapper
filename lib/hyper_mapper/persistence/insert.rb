@@ -14,7 +14,7 @@ module HyperMapper
       end
       
       def create!(params={})
-        self.new(params).save!
+        self.new(params).save
       end 
 
       def create_space

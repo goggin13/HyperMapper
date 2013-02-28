@@ -10,14 +10,14 @@ describe 'HyperMapper::Document::Finders' do
     end
   end
 
-  before do
-    @client = stub_client
-  end
-
   after :all do
     Object.send(:remove_const, :FinderTestClass)
   end
   
+  before do
+    @client = stub_client
+  end
+
   describe "where" do
     
     describe "with results" do

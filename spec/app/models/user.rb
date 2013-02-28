@@ -4,5 +4,6 @@ class User
 
   attribute :username, key: true
   attribute :email
-
+  
+  embeds_many :posts
 end

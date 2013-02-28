@@ -10,7 +10,7 @@ module HyperMapper
     end
 
     def default_config_path
-      "/home/goggin/projects/rails/hyper_mapper/lib/hyper_mapper/config/config.yml"
+      "lib/hyper_mapper/config/config.yml"
     end
 
     def load_defaults
