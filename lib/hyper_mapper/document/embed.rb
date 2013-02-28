@@ -46,6 +46,10 @@ module HyperMapper
         self[0]
       end
 
+      def each(&block)
+        @elements.each { |k,v| block.call(v) }
+      end
+
       def to_a
         @elements.map do |k, child|
           child.to_json
@@ -62,6 +66,12 @@ module HyperMapper
           instance.send("#{attr}=", val)
         end
         instance
+      end
+
+      def create!(attrs)
+        child = @klass.load_from_attrs(attrs)
+        self.<< child
+        child.save
       end
     end
 

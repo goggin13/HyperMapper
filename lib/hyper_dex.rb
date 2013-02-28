@@ -22,7 +22,11 @@ module HyperDex
 
     def cond_put(space, key, condition, attrs) end
     def delete(space, key) end
-    def search(space, predicate) end
+    
+    def search(space, predicate)
+      @client.search space, true
+    end
+
     def atomic_add(space, key, value) end
     def atomic_sub(space, key, value) end
     def atomic_div(space, key, value) end
