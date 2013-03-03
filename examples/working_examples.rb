@@ -21,6 +21,7 @@ class User
   key :username
   attribute :first
   attribute :last
+  attribute :email
 
   embeds_many :posts
 end

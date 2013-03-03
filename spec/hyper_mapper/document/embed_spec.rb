@@ -65,9 +65,10 @@ describe 'HyperMapper::Document::Embed' do
     end
 
     xit "should offer a create method" do
-      @user.posts.create! id: 3, title: "test"
+      @user.posts.create! title: "test"
     end
-
+    
+    it "should create 2 posts for two subsequent create calls"
   end
 
   describe "embedded_in" do

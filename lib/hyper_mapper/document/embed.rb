@@ -79,11 +79,16 @@ module HyperMapper
         end
         instance
       end
+      
+      def create(attrs)
+        create!(attrs)
+      end
 
       def create!(attrs)
         child = @klass.load_from_attrs(attrs)
         self.<< child
         child.save
+        self.<< child
         child
       end
 
