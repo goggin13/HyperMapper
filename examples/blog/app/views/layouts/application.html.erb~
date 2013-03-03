@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-  <title>HyperMapper</title>
+  <title>Paperlike by FCT</title>
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
@@ -12,19 +12,16 @@
 	<div id="header-wrapper">
 		<div id="header">
 			<div id="logo">
-        <h1>
-          <%= image_tag 'hyperdex.png' %>
-          <%= link_to 'HyperMapper', root_path %>
-        </h1>
+				<h1><a href="#">Paperlike </a></h1>
 				<p>Template design by <a href="http://www.freecsstemplates.org/">FCT</a></p>
 			</div>
 			<div id="menu">
 				<ul>
 					<li class="active"><a href="#" accesskey="1" title=""><span>Home</span></a></li>
-					<li><a href="#" accesskey="2" title=""><span>Users</span></a></li>
-          <li><a href="#" accesskey="3" title=""><span>Sign In</span></a></li>
-          <li><a href="#" accesskey="3" title=""><span>Sign Up</span></a></li>
-          
+					<li><a href="#" accesskey="2" title=""><span>Services</span></a></li>
+					<li><a href="#" accesskey="3" title=""><span>Clients</span></a></li>
+					<li><a href="#" accesskey="4" title=""><span>About</span></a></li>
+					<li><a href="#" accesskey="5" title=""><span>Contact</span></a></li>
 				</ul>
 			</div>
 		</div>
@@ -32,7 +29,21 @@
 	<!-- end #header -->
 	<div id="page">
 		<div id="content">
-      <%= yield %>
+			<div class="post">
+				<h2 class="title"><a href="#">Welcome to Paperlike </a></h2>
+				<p class="meta"><span class="author"><a href="#">Someone</a></span> <span class="date">October 07, 2011</span>&nbsp;<span class="links"><a href="#" title="">Comments</a></span></p>
+				<div class="entry">
+					<p>This is <strong>Paperlike </strong>, a free, fully standards-compliant CSS template designed by <a href="http://www.freecsstemplates.org/">FCT</a>.  This free template is released under a <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0</a> license, so you’re pretty much free to do whatever you want with it (even use it commercially) provided you keep the links in the footer intact. Aside from that, have fun with it :)</p>
+					<p>Sed lacus. Donec lectus. Nullam pretium nibh ut turpis. Nam bibendum. In nulla tortor, elementum ipsum. Proin imperdiet est. Phasellus dapibus semper urna. Pellentesque ornare, orci in felis. Donec ut ante. In id eros. Suspendisse lacus turpis, cursus egestas at sem.</p>
+				</div>
+			</div>
+			<div class="post">
+				<h2 class="title"><a href="#">Lorem ipsum sed aliquam</a></h2>
+				<p class="meta"><span class="author"><a href="#">Someone</a></span> <span class="date">October 07, 2011</span>&nbsp;<span class="links"><a href="#" title="">Comments</a></span></p>
+				<div class="entry">
+					<p>Sed lacus. Donec lectus. Nullam pretium nibh ut turpis. Nam bibendum. In nulla tortor, elementum vel, tempor at, varius non, purus. Mauris vitae nisl nec metus placerat consectetuer. Donec ipsum. Proin imperdiet est. Phasellus <a href="#">dapibus semper urna</a>. Pellentesque ornare, orci in consectetuer hendrerit, urna elit eleifend nunc, ut consectetuer nisl felis ac diam. Etiam non felis. Donec ut ante. In id eros. Suspendisse lacus turpis, cursus egestas at sem.  Mauris quam enim, molestie in, rhoncus ut, lobortis a, est.</p>
+				</div>
+			</div>
 		</div>
 		<div id="sidebar">
 			<ul>
@@ -94,7 +105,7 @@
 	<!-- end #page -->
 </div>
 <div id="footer">
-	<p>Design by <a href="http://www.freecsstemplates.org/">FCT</a>.</p>
+	<p>Copyright (c) 2010 Sitename.com. All rights reserved. Design by <a href="http://www.freecsstemplates.org/">FCT</a>.</p>
 </div>
 <!-- end #footer -->
 </body>

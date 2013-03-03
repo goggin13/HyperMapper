@@ -7,6 +7,8 @@ class User
   attribute :first
   attribute :last
   attribute :email
+  
+  validates_presence_of :email
 
   embeds_many :posts
 end
