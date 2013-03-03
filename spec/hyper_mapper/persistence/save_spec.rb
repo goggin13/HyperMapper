@@ -33,6 +33,10 @@ describe 'HyperMapper::Persistence' do
         end
       end
       
+      after :all do
+        Object.send(:remove_const, :TestClass)
+      end
+
       it "should allow you to set the key yourself" do
         instance = TestClass.new testKey: 1, test: "hello"
         stub_put 'test_classes', 1, {test: 'hello'}
@@ -47,7 +51,15 @@ describe 'HyperMapper::Persistence' do
           arg3.should == {test: 'hello'}
         end
         instance.save
-      end      
+      end
+      
+      it "should not try to create a new key for an instance loaded via find" do
+        stub_get 'test_classes', 'a_valid_id', {test: 'hello'}
+        instance = TestClass.find('a_valid_id')
+        instance.test = 'goodbye'
+        stub_put 'test_classes', 'a_valid_id', {test: 'goodbye'}
+        instance.save
+      end
     end
   end
 
@@ -69,6 +81,11 @@ describe 'HyperMapper::Persistence' do
       stub_put 'users', 'goggin', {email: 'matt@example.com'}
       @user.save
       @user.should be_persisted
+    end
+
+    it "should return true after being loaded" do
+      stub_get 'users', 'goggin', {email: 'matt@example.com'}
+      (User.find 'goggin').should be_persisted
     end
   end
 end

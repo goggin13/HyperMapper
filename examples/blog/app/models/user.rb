@@ -8,5 +8,4 @@ class User
   attribute :last
 
   embeds_many :posts
-
 end

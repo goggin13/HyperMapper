@@ -98,6 +98,10 @@ module HyperMapper
     def to_key
       [key_value]
     end
+    
+    def to_param
+      key_value
+    end
 
     def model_name
       self.class.name
@@ -105,6 +109,12 @@ module HyperMapper
 
     def attribute_values_map
       @attribute_values ||= {}
+    end
+    
+    def clean_attributes!
+      attribute_values_map.each do |k, v|
+        v.dirty = false
+      end
     end
 
     def attribute_values_map_raw
@@ -116,7 +126,9 @@ module HyperMapper
     
     def attributes_for_save
       attrs = attribute_values_map.inject({}) do |acc, (key, field)|
-        acc[key] = ((field && field.dirty) ? field.value : nil)
+        if field && field.dirty
+          acc[key] = field.value
+        end
         acc
       end
 

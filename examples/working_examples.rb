@@ -59,6 +59,10 @@ user.posts.each do |post|
   puts "\t#{post.title} : #{post.content}"
 end
 
+User.all.each do |u|
+  puts u.username
+end
+
 #destroy = <<-BASH
 #/home/goggin/projects/install/bin/hyperdex rm-space users
 #BASH

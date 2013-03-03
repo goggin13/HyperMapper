@@ -1,4 +1,4 @@
-#require 'hyperclient'
+require 'hyperclient'
 
 module HyperDex
 
@@ -11,7 +11,9 @@ module HyperDex
     end
 
     def get(space, key) 
-      @client.get space, key
+      r = @client.get space, key
+      puts r
+      r
     end
 
     def put(space, key, attrs) 
@@ -20,10 +22,18 @@ module HyperDex
     end
 
     def cond_put(space, key, condition, attrs) end
-    def delete(space, key) end
+    def delete(space, key) 
+      @client.del space, key
+    end
     
     def search(space, predicate)
-      @client.search space, true
+      r = @client.search space, predicate
+      arr = []
+      while r.has_next
+        arr << r.next
+      end
+
+      arr
     end
 
     def atomic_add(space, key, value) end

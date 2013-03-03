@@ -2,6 +2,7 @@ require 'active_support/inflector'
 
 module HyperMapper
   module Persistence
+    attr_accessor :persisted
 
     def save
       run_callbacks :save do
@@ -17,6 +18,11 @@ module HyperMapper
 
     def persisted?
       @persisted.nil? ? false : @persisted
+    end
+    
+    def persisted=(v)
+      @persisted=v
+      clean_attributes! if @persisted
     end
 
     private 

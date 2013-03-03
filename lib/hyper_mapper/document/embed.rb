@@ -11,17 +11,19 @@ module HyperMapper
         children_hash = options[:values] ? options[:values].value : "[]"
         children_hash ||= []
         if children_hash.is_a? String
+          children_hash = '[]' if children_hash.length == 0
           children_hash = JSON.load children_hash 
         end
 
         @elements = {}
         children_hash.each do |attrs|
           if attrs.is_a? String
-            add_from_json attrs
+            child = add_from_json attrs
           else
             child = @klass.load_from_attrs attrs
             self.<< child
           end
+          child.persisted = true 
         end
       end
 
@@ -31,6 +33,10 @@ module HyperMapper
 
       def find(id)
         @elements[id]
+      end
+
+      def remove(id)
+        @elements.delete(id) if @elements.has_key?(id)
       end
 
       def <<(item)
@@ -47,7 +53,7 @@ module HyperMapper
       end
 
       def each(&block)
-        @elements.each { |k,v| block.call(v) }
+        (@elements || {}).each { |k,v| block.call(v) }
       end
 
       def to_a
@@ -56,8 +62,14 @@ module HyperMapper
         end.to_json
       end
 
+      def all
+        @elements.map { |k, child| child }
+      end
+
       def add_from_json(json)
-        self.<< from_json!(json)
+        child = from_json! json
+        self.<< child
+        child
       end
 
       def from_json!(string)
@@ -72,6 +84,13 @@ module HyperMapper
         child = @klass.load_from_attrs(attrs)
         self.<< child
         child.save
+        child
+      end
+
+      def build(attrs={})
+        child = @klass.new(attrs)
+        self.<< child
+        child
       end
     end
 
