@@ -9,8 +9,4 @@ class User
 
   embeds_many :posts
 
-  def self.all
-    []
-  end
-
 end
