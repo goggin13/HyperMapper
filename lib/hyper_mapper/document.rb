@@ -8,8 +8,12 @@ module HyperMapper
     def self.included(mod)
       mod.send(:extend, ClassMethods)
       mod.send(:extend, HyperMapper::Finders)
-      mod.send(:include, HyperMapper::Persistence)
+
+      mod.send(:extend, ActiveModel::Callbacks)
+      mod.send(:define_model_callbacks, :save)
+
       mod.send(:include, ActiveModel::Validations)
+      mod.send(:include, HyperMapper::Persistence)
     end
 
     def initialize(params={})

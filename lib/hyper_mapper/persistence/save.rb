@@ -4,24 +4,27 @@ module HyperMapper
   module Persistence
 
     def save
-      if self.class.embedded?
-        parent.save
-      else
-        persist if valid?
+      run_callbacks :save do
+        if self.class.embedded?
+          @persisted = parent.save
+        else
+          (@persisted = persist) if valid?
+        end
+
+        @persisted
       end
-      self
     end
 
-    def key_value
-      attribute_values_map_raw[self.class.key_name]
+    def persisted?
+      @persisted.nil? ? false : @persisted
     end
 
     private 
       
       def persist
-        attrs = attribute_values_map_raw
-        key = attrs.delete self.class.key_name
-        HyperMapper::Config.client.put(self.class.space_name, key, attrs) if key
+        return false unless key_value
+        attrs = attributes_for_save
+        HyperMapper::Config.client.put(self.class.space_name, key_value, attrs)
       end
   end
 end

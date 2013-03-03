@@ -26,3 +26,15 @@ def stub_client
   client = double('client')
   HyperMapper::Config.client = client
 end
+
+def stub_put(space, key, attrs, ret=true)
+  @client.should_receive(:put)
+           .with(space, key, attrs)
+           .and_return(true)
+end
+
+def stub_get(space, key, ret)
+  @client.should_receive(:get)
+           .with(space, key)
+           .and_return(ret)
+end

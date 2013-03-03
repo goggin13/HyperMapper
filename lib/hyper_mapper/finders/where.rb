@@ -17,6 +17,10 @@ module HyperMapper
       results.map { |r| load_from_attrs(r) }
     end
 
+    def all
+      where {}
+    end
+
     def load_from_attrs(attrs)
       self.new(attrs)
     end

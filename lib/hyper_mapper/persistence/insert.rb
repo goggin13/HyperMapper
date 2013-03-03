@@ -10,11 +10,13 @@ module HyperMapper
       end
 
       def create(params={})
-        self.new(params).save
+        instance = self.new(params)
+        instance.save
+        instance
       end
       
       def create!(params={})
-        self.new(params).save
+        create(params)
       end 
 
       def create_space

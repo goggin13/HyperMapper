@@ -9,18 +9,6 @@ class User
 
   embeds_many :posts
 
-  def to_key
-    [username]
-  end
-
-  def persisted?
-    false
-  end
-
-  def model_name
-    'User'
-  end
-
   def self.all
     []
   end

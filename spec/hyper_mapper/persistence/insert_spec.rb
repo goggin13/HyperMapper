@@ -9,10 +9,7 @@ describe 'HyperMapper::Persistence' do
   describe "create!" do
     
     it "should pass the correct arguments to the hyperdex-client" do
-      @client.should_receive(:put)
-             .with('users', 
-                   'goggin',
-                   {email: 'matt@example.com', posts: '[]'})
+      stub_put 'users', 'goggin', {email: 'matt@example.com'}
       User.create! username: 'goggin',
                    email: 'matt@example.com'
     end
@@ -21,10 +18,7 @@ describe 'HyperMapper::Persistence' do
   describe "create" do
     
     it "should pass the correct arguments to the hyperdex-client" do
-      @client.should_receive(:put)
-             .with('users', 
-                   'goggin',
-                   {email: 'matt@example.com', posts: '[]'})
+      stub_put 'users', 'goggin', {email: 'matt@example.com'}
       User.create username: 'goggin',
                   email: 'matt@example.com'
     end

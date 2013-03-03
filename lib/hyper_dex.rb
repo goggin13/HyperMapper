@@ -1,5 +1,4 @@
 #require 'hyperclient'
-require 'hyperclient'
 
 module HyperDex
 
