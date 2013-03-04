@@ -110,8 +110,11 @@ describe 'HyperMapper::Document::Embed' do
     it "should persist the parent object" do
       @post.title = 'a new title'
       @user.email = 'new@example.com'
-      post_json = [{title: 'a new title', id: '1'}.to_json, {title: 'Goodbye world', id: '2'}.to_json].to_json
-      stub_put 'users', 'goggin13',{email: 'new@example.com', posts: post_json}
+      post_map = {
+        '1' => {title: 'a new title'}.to_json,
+        '2' => {title: 'Goodbye world'}.to_json
+      }
+      stub_put 'users', 'goggin13', {email: 'new@example.com', posts: post_map}
       @post.save
     end
 

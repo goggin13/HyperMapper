@@ -134,7 +134,7 @@ module HyperMapper
 
       self.class.embedded_classes.each do |children|
         if self.send(children).length > 0
-          attrs[children] = self.send(children).to_a
+          attrs[children] = self.send(children).to_json
         else
           attrs.delete children
         end

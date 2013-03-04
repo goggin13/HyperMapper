@@ -8,21 +8,27 @@ module HyperMapper
         @klass = options[:class]
         @parent = options[:parent]
 
-        children_hash = options[:values] ? options[:values].value : "[]"
-        children_hash ||= []
-        if children_hash.is_a? String
-          children_hash = '[]' if children_hash.length == 0
-          children_hash = JSON.load children_hash 
-        end
+        children = options[:values] ? options[:values].value : nil
 
         @elements = {}
-        children_hash.each do |attrs|
-          if attrs.is_a? String
-            child = add_from_json attrs
-          else
-            child = @klass.load_from_attrs attrs
-            self.<< child
-          end
+        if children.is_a? Hash
+          initialize_from_json_map children
+        elsif children.is_a? Array
+          initialize_from_array children
+        end
+      end
+
+      def initialize_from_array(arr)
+        arr.each do |attrs|
+          child = @klass.load_from_attrs attrs
+          self.<< child
+          child.persisted = false
+        end
+      end
+      
+      def initialize_from_json_map(map)
+        map.each do |k, attrs|
+          child = add_from_json k, attrs
           child.persisted = true 
         end
       end
@@ -56,10 +62,13 @@ module HyperMapper
         (@elements || {}).each { |k,v| block.call(v) }
       end
 
-      def to_a
-        @elements.map do |k, child|
-          child.to_json
-        end.to_json
+      def to_json
+        @elements.inject({}) do |acc, (k, child)|
+          child_json = child.serializable_hash
+          child_json.delete @klass.key_name
+          acc[child.key_value.to_s] = child_json.to_json
+          acc
+        end
       end
 
       def all
@@ -72,7 +81,7 @@ module HyperMapper
         child
       end
 
-      def from_json!(string)
+      def from_json!(json_map)
         instance = @klass.new
         JSON.load(string).each do |attr, val| 
           instance.send("#{attr}=", val)
@@ -98,16 +107,20 @@ module HyperMapper
         child
       end
     end
-
-    def to_json
+    
+    def serializable_hash
       hash = attribute_values_map.inject({}) do |acc, (k, attr)|
         acc[attr.name] = attr.value.to_s
         acc
       end
      
       hash.delete parent_name
+      
+      hash
+    end
 
-      hash.to_json
+    def to_json
+      serializable_hash.to_json
     end
 
     module ClassMethods
