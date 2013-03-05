@@ -86,7 +86,22 @@ describe 'HyperMapper::Document::Embed' do
       @user.posts.create! title: "test"
     end
     
-    it "should create 2 posts for two subsequent create calls"
+    it "should create 2 posts for two subsequent create calls" do
+       @client.should_receive(:put) do |space, key, hash|
+          space.should == 'users'
+          key.should == 'goggin13'
+          hash[:posts].length.should == 3
+       end
+       @user.posts.create! title: "test"
+       @client.should_receive(:put) do |space, key, hash|
+          space.should == 'users'
+          key.should == 'goggin13'
+          hash[:posts].length.should == 4
+       end       
+       @user.posts.create! title: "test2"
+    end
+
+
   end
 
   describe "embedded_in" do
