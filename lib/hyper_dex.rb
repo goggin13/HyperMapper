@@ -12,12 +12,16 @@ module HyperDex
 
     def get(space, key) 
       r = @client.get space, key
-      puts r
       r
     end
 
     def put(space, key, attrs) 
-      formatted = attrs.map { |k,v| [k.to_s, v.to_s] }
+      formatted = attrs.map { |k,v| 
+        k = k.to_s if k.is_a? Symbol
+        v = v.to_s if v.is_a? Symbol
+        [k, v] 
+      }
+      puts "#{space} : #{key} => #{formatted}"
       @client.put space, key, formatted 
     end
 
