@@ -137,7 +137,8 @@ module HyperMapper
         child_class = children.to_s.singularize.camelcase.constantize
         
         define_method children do
-          @embedded ||= 
+          @embedded_collections ||= {}
+          @embedded_collections[children] ||= 
              EmbeddedCollection.new class: child_class,
                                     values: attribute_values_map[children],
                                     parent: self

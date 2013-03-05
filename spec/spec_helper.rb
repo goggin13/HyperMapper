@@ -44,3 +44,9 @@ def stub_any_put(space, ret=true)
     space.should == s
   end.and_return(ret)
 end
+
+def stub_search(space, predicate, result)
+  @client.should_receive(:search)
+         .with(space, predicate)
+         .and_return(result)
+end
