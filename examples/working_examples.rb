@@ -56,26 +56,11 @@ user.posts.create! id: 2, title: 'My new post', content: 'more great content'
 user = User.find('goggin13')
 
 puts "#{user.username} has #{user.posts.length} posts now"
-user.posts.each do |post|
-  puts "\t#{post.title} : #{post.content}"
+user.posts.each do |p|
+  puts "\t#{p.title} : #{p.content}"
 end
 
 User.all.each do |u|
   puts u.username
 end
 
-#destroy = <<-BASH
-#/home/goggin/projects/install/bin/hyperdex rm-space users
-#BASH
-#system destroy
-#create = <<-BASH
-# /home/goggin/projects/install/bin/hyperdex add-space <<EOF
-# space users 
-# key username
-# attributes first, last, posts
-# subspace first, last, posts
-# tolerate 2 failures
-# EOF
-# BASH
-#
-#system create

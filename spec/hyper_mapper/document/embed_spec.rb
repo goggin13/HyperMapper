@@ -32,16 +32,34 @@ describe 'HyperMapper::Document::Embed' do
       @user.posts[1].should be_a Post
       @user.posts[0].title.should == 'Hello world'
       @user.posts[1].title.should == 'Goodbye world'
+      @user.posts[0].id.should == 1
+      @user.posts[1].id.should == 2
     end
     
     it "should not mark the returned posts from new as persisted" do
       @user.posts[0].should_not be_persisted
     end
+    
 
-    it "should mark the returned posts as persisted if retrieved via find" do
-      stub_get 'users', 'goggin13', @attrs
-      @user = User.find 'goggin13'
-      @user.posts[0].should be_persisted
+    describe "from find" do
+
+      before do
+        attrs = {
+            posts: {'1' => {title: 'Hello world'}.to_json,
+                    '2' => {title: 'Goodbye world'}.to_json}
+          }
+        stub_get 'users', 'goggin13', attrs
+        @user = User.find 'goggin13'
+      end
+
+      it "should mark the returned posts as persisted if retrieved via find" do
+        @user.posts[0].should be_persisted
+      end
+
+      it "should set the id on the child objects" do
+         @user.posts[0].id.should == '1'
+         @user.posts[1].id.should == '2'
+      end
     end
 
     it "should be able to be added to" do
@@ -123,10 +141,12 @@ describe 'HyperMapper::Document::Embed' do
        @client.should_receive(:put) do |space, key, hash|
           space.should == 'users'
           key.should == 'goggin13'
-          posts_arr = JSON.load hash[:posts]
-          post = user.posts.from_json! posts_arr[0]
-          post.id.length.should == 32
-          post.title.should == 'test'
+          hash[:posts].length.should == 1
+          hash[:posts].each do |k, v|
+             post = JSON.load v
+             post['title'].should == 'test'
+             k.length.should == 32
+          end
        end
        user.posts.create! title: 'test'
     end
@@ -138,7 +158,7 @@ describe 'HyperMapper::Document::Embed' do
         stub_any_put 'users'
         expect {
           @user.posts[0].destroy
-        }.to change(@user.posts, :length).by -1
+        }.to change(@user.posts, :length).by(-1)
       end
     end
   end  

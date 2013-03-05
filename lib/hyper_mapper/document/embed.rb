@@ -63,7 +63,7 @@ module HyperMapper
       end
 
       def to_json
-        @elements.inject({}) do |acc, (k, child)|
+        @elements.inject({}) do |acc, (_, child)|
           child_json = child.serializable_hash
           child_json.delete @klass.key_name
           acc[child.key_value.to_s] = child_json.to_json
@@ -75,15 +75,16 @@ module HyperMapper
         @elements.map { |k, child| child }
       end
 
-      def add_from_json(json)
+      def add_from_json(k, json)
         child = from_json! json
+        child.send("#{@klass.key_name}=", k)
         self.<< child
         child
       end
 
       def from_json!(json_map)
         instance = @klass.new
-        JSON.load(string).each do |attr, val| 
+        JSON.load(json_map).each do |attr, val| 
           instance.send("#{attr}=", val)
         end
         instance
