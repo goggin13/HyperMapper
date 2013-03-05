@@ -6,4 +6,5 @@ class User
   attribute :email
   
   embeds_many :posts
+  has_many :articles
 end

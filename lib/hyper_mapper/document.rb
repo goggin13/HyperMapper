@@ -1,5 +1,6 @@
 require 'hyper_mapper/document/attribute' 
 require 'hyper_mapper/document/embed' 
+require 'hyper_mapper/document/has_many' 
 require 'hyper_mapper/finders'
 require 'active_model'
 
