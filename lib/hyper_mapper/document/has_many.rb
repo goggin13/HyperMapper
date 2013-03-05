@@ -28,7 +28,21 @@ module HyperMapper
       end
 
       def first
-        [0]
+        self.send('[]', 0)
+      end
+
+      def length
+        all.length
+      end
+
+      def create!(attrs)
+        attrs[foreign_key] = @parent.key_value
+        @klass.create! attrs
+      end
+
+      def <<(child)
+        child.send("#{@foreign_key}=", @parent.key_value)
+        child.save
       end
     end
 

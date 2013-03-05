@@ -23,28 +23,17 @@ describe 'HyperMapper::Document::HasMany' do
       @user.articles.foreign_key.should == 'user_id'
     end
 
-    it "should return the relevant articles" do
-      @user.articles[0].should be_a Article
-      @user.articles[1].should be_a Article
-      @user.articles[0].title.should == 'Hello world'
-      @user.articles[1].title.should == 'Goodbye world'
-      @user.articles[0].id.should == 1
-      @user.articles[1].id.should == 2
-    end
-    
-    it "should not mark the returned posts from new as persisted" do
-      @user.articles[0].should_not be_persisted
-    end
-
     it "should be able to be added to" do
-      post = Article.new id: 3, title: "test"
+      post = Article.new title: "test"
+      stub_auto_id_put 'articles', {user_id: @user.username, title: 'test'}
       @user.articles << post
-      @user.articles.length.should == 3
-      @user.articles.find(3).user.username.should == @user.username
     end
 
     it "should return the first item" do
-      @user.articles.first.title.should == 'Hello world'
+      stub_search 'articles', 
+                  {'user_id' => 'goggin13'}, 
+                  [{title: 'Goodbye world', user_id: @user.username, id: 2}]      
+      @user.articles.first.title.should == 'Goodbye world'
     end
 
     it "should offer a find method" do
@@ -54,10 +43,16 @@ describe 'HyperMapper::Document::HasMany' do
       article = @user.articles.find(2)
       article.title.should == 'Goodbye world'
       article.id.should == 2
+      article.persisted.should be_true
     end
     
     it "should offer a create method" do
-      @user.articles.create! title: "test"
+      stub_auto_id_put 'articles', {title: 'test', user_id: @user.username}
+      article = @user.articles.create! title: "test"
+      article.user_id.should == @user.username
+      article.id.should_not be_nil
+      article.id.length.should == 32
+      article.title.should == 'test'
     end
   end
 
