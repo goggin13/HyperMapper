@@ -25,7 +25,6 @@ module HyperDex
       @client.put space, key, formatted 
     end
 
-    def cond_put(space, key, condition, attrs) end
     def delete(space, key) 
       @client.del space, key
     end
@@ -40,6 +39,11 @@ module HyperDex
       arr
     end
 
+    def map_remove(space, key, map_key)
+      @client.map_remove space, key, map_key
+    end
+    
+    def cond_put(space, key, condition, attrs) end
     def atomic_add(space, key, value) end
     def atomic_sub(space, key, value) end
     def atomic_div(space, key, value) end
@@ -96,6 +100,7 @@ module HyperDex
     def async_map_string_append(space, key, value) end
     def async_set_union(space, key, value) end
     def loop() end
+
     def create_space
        cmd = '/home/goggin/projects/install/bin/hyperdex '
        cmd += 'add-space '

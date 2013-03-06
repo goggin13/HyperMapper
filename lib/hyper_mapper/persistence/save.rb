@@ -7,7 +7,13 @@ module HyperMapper
     def save
       run_callbacks :save do
         if self.class.embedded?
-          @persisted = parent.save
+          to_add = {}
+          hash = serializable_hash
+          hash.delete self.class.key_name
+          to_add[key_value] = hash.to_json
+          @persisted = HyperMapper::Config.client.map_add parent.class.space_name,
+                                                          parent.key_value,
+                                                          to_add
         else
           (@persisted = persist) if valid?
         end

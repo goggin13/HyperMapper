@@ -7,6 +7,7 @@ module HyperMapper
       def initialize(options={})
         @klass = options[:class]
         @parent = options[:parent]
+        @klass_plural = @klass.name.to_s.underscore
 
         children = options[:values] ? options[:values].value : nil
 
@@ -96,7 +97,7 @@ module HyperMapper
 
       def create!(attrs)
         child = @klass.load_from_attrs(attrs)
-        self.<< child
+        child.parent = @parent
         child.save
         self.<< child
         child
@@ -110,7 +111,7 @@ module HyperMapper
     end
     
     def serializable_hash
-      hash = attribute_values_map.inject({}) do |acc, (k, attr)|
+      hash = attribute_values_map.inject({}) do |acc, (_, attr)|
         acc[attr.name] = attr.value.to_s
         acc
       end

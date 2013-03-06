@@ -59,18 +59,18 @@ describe 'HyperMapper::Document::HasMany' do
   describe "belongs_to" do
     
     before do
-      @article = @user.article[0]
+      @article = Article.new title: 'hello', id: 1, user_id: 'goggin13'
     end
 
     it "should add a singular function name to the child object" do
       @article.should respond_to :user
     end
 
-    it "should add a parent functionto the child object" do
-      @article.should respond_to :parent
-    end    
-
     it "should return the relevant user" do
+      stub_search 'users', 
+                 {username: 'goggin13'},
+                 [{username: 'goggin13', 
+                   email: 'goggin13@example.com'}]
       user = @article.user
       user.should be_a User
       user.username.should == 'goggin13'
