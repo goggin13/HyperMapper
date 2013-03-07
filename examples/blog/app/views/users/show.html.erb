@@ -6,21 +6,25 @@
 </p>
 
 <p>
-  <b>First:</b>
-  <%= @user.first %>
+  <b>Name:</b>
+  <%= @user.first %> <%= @user.last %>
 </p>
 
 <p>
-  <b>Last:</b>
-  <%= @user.last %>
+  <b>Email:</b>
+  <%= @user.email %>
 </p>
+
+<%= link_to 'New Post', new_user_post_path(@user) %> | 
+<%= link_to 'Edit', edit_user_path(@user) %> |
+<%= link_to 'Back', users_path %>
 
 <h3>Posts</h3>
 <% @user.posts.each do |post| %>
   <hr/>
   <h5><%= post.title %></h5>
   <p><%= post.content %></p>
+  <p><%= link_to 'Edit', edit_user_post_path(@user, post) %></p>
 <% end %>
 
-<%= link_to 'Edit', edit_user_path(@user) %> |
-<%= link_to 'Back', users_path %>
+

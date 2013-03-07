@@ -6,6 +6,9 @@
 </p>
 
 <p>
+  Posted by <%= link_to @post.user.username, user_path(@post.user) %>.
+
+<p>
   <b>Title:</b>
   <%= @post.title %>
 </p>

@@ -7,7 +7,7 @@ module HyperMapper
     def save
       run_callbacks :save do
         if self.class.embedded?
-          @persisted = parent.save
+          (@persisted = parent.save) if valid?
         else
           (@persisted = persist) if valid?
         end
