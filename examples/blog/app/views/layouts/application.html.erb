@@ -31,7 +31,10 @@
 	</div>
 	<!-- end #header -->
 	<div id="page">
-		<div id="content">
+    <div id="content">
+      <% flash.each do |key, value| %>
+          <div class="alert alert-<%= key %>"><%= value %></div>
+      <% end %> 
       <%= yield %>
 		</div>
 		<div id="sidebar">
