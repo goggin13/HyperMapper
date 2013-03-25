@@ -30,7 +30,7 @@ end
 def stub_put(space, key, attrs, ret=true)
   @client.should_receive(:put)
            .with(space, key, attrs)
-           .and_return(true)
+           .and_return(ret)
 end
 
 def stub_get(space, key, ret)

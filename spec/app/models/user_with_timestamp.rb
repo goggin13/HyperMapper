@@ -1,11 +1,9 @@
 
-class User
+class UserWithTimestamp 
   include HyperMapper::Document
 
   attribute :username, key: true
   attribute :email
-  
-  embeds_many :posts
-  has_many :articles
 
+  timestamps
 end

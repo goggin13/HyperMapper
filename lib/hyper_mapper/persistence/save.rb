@@ -5,21 +5,32 @@ module HyperMapper
     attr_accessor :persisted
 
     def save
+      callbacks = persisted? ? [:save] : [:save, :create]
       run_callbacks :save do
-        if self.class.embedded?
-          to_add = {}
-          hash = serializable_hash
-          hash.delete self.class.key_name
-          to_add[key_value] = hash.to_json
-          @persisted = HyperMapper::Config.client.map_add parent.class.space_name,
-                                                          parent.key_value,
-                                                          to_add
+        if persisted? 
+          save_inner
         else
-          (@persisted = persist) if valid?
+          run_callbacks :create do
+            save_inner
+          end
         end
-
-        @persisted
       end
+    end
+    
+    def save_inner
+      if self.class.embedded?
+        to_add = {}
+        hash = serializable_hash
+        hash.delete self.class.key_name
+        to_add[key_value] = hash.to_json
+        persisted = HyperMapper::Config.client.map_add parent.class.space_name,
+                                                        parent.key_value,
+                                                        to_add
+      else
+        (self.persisted = persist) if valid?
+      end
+
+      @persisted
     end
 
     def persisted?
