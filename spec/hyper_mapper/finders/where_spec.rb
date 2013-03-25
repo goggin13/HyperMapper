@@ -59,7 +59,7 @@ describe 'HyperMapper::Document::Finders' do
         results[2].field_1.should == 'c'
       end
 
-      it "should sort the results desc if requested" do
+      it "should sort the results descending if requested" do
         results = FinderTestClass.where field_2: "hello", order: :field_1, sort: :desc
         results[2].field_1.should == 'a'
         results[1].field_1.should == 'b'
