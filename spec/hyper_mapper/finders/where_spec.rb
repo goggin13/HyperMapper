@@ -39,7 +39,34 @@ describe 'HyperMapper::Document::Finders' do
         results[0].field_2.should == "hello"
       end      
     end
-    
+
+    describe "sorted" do
+
+      before do
+        @client.should_receive(:search)
+               .with('finder_test_classes', {field_2: 'hello'})
+               .and_return([
+                 {field_1: "c", field_2: "hello"},
+                 {field_1: "a", field_2: "hello"},
+                 {field_1: "b", field_2: "hello"}
+               ])
+      end
+
+      it "should sort the results ascending by default if requested" do
+        results = FinderTestClass.where field_2: "hello", order: :field_1
+        results[0].field_1.should == 'a'
+        results[1].field_1.should == 'b'
+        results[2].field_1.should == 'c'
+      end
+
+      it "should sort the results desc if requested" do
+        results = FinderTestClass.where field_2: "hello", order: :field_1, sort: :desc
+        results[2].field_1.should == 'a'
+        results[1].field_1.should == 'b'
+        results[0].field_1.should == 'c'
+      end
+    end
+
     describe "without results" do
 
       it "should return an empty array" do
