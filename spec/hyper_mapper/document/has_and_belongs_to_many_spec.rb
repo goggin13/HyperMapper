@@ -33,6 +33,10 @@ describe 'HyperMapper::Document::HasAndBelongsToMany' do
       @tag.should respond_to :articles
     end
     
+    it "should return a class with a join_table" do
+      @tag.articles.join_table.should == 'articles_tags'
+    end
+
     xit "should be able to be added to" do
       post = Article.new title: "test"
       stub_auto_id_put 'articles', {user_id: @user.username, title: 'test'}

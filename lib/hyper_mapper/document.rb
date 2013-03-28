@@ -4,6 +4,7 @@ require 'hyper_mapper/document/has_many'
 require 'hyper_mapper/document/has_and_belongs_to_many' 
 require 'hyper_mapper/document/timestamp' 
 require 'hyper_mapper/finders'
+require 'hyper_mapper/exceptions/exceptions.rb'
 require 'active_model'
 
 module HyperMapper
@@ -13,6 +14,7 @@ module HyperMapper
       mod.send(:extend, HyperMapper::Finders)
 
       mod.send(:extend, ActiveModel::Callbacks)
+      mod.send(:extend, ActiveModel::Naming)
       mod.send(:define_model_callbacks, :save, :create)
 
       mod.send(:include, ActiveModel::Validations)

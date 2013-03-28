@@ -135,7 +135,7 @@ module HyperMapper
         
         attribute children
 
-        child_class = children.to_s.singularize.camelcase.constantize
+        child_class = children.to_s.classify.constantize
         
         define_method children do
           @embedded_collections ||= {}

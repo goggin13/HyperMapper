@@ -7,7 +7,7 @@ module HyperMapper
       def initialize(options={})
         @klass = options[:class]
         @parent = options[:parent]
-        @foreign_key = "#{@parent.class.name.underscore}_id"
+        @foreign_key = @parent.model_name.foreign_key
       end
 
       def [](v)
@@ -49,7 +49,7 @@ module HyperMapper
     module ClassMethods
       def has_many(children)
 
-        child_class = children.to_s.singularize.camelcase.constantize 
+        child_class = children.to_s.classify.constantize
 
         define_method children do
           @child_classes ||= {}
@@ -62,7 +62,7 @@ module HyperMapper
       def belongs_to(parent)
         define_method parent do
           foreign_key = "#{parent}_id"
-          parent_klass = parent.to_s.camelcase.constantize
+          parent_klass = parent.to_s.classify.constantize
           predicate = {}
           predicate[parent_klass.key_name] = self.send(foreign_key)
           (parent_klass.where predicate)[0]
