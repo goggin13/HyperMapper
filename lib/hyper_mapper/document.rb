@@ -16,6 +16,7 @@ module HyperMapper
       mod.send(:extend, ActiveModel::Callbacks)
       mod.send(:extend, ActiveModel::Naming)
       mod.send(:include, ActiveModel::Serializers::JSON)
+      mod.send(:include, ActiveModel::Serializers::Xml)
       mod.send(:define_model_callbacks, :save, :create)
 
       mod.send(:include, ActiveModel::Validations)

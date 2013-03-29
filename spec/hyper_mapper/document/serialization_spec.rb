@@ -20,5 +20,12 @@ describe 'HyperMapper::Document::Serialization' do
       @user.to_json.should == user_json
     end
   end
+
+  describe "to_xml" do
+    it "should return an xml representation" do
+      user_xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<user>\n  <email>matt@example.com</email>\n  <username>goggin13</username>\n</user>\n"
+      @user.to_xml.should == user_xml
+    end
+  end
 end
 
