@@ -110,21 +110,6 @@ module HyperMapper
       end
     end
     
-    def serializable_hash
-      hash = attribute_values_map.inject({}) do |acc, (_, attr)|
-        acc[attr.name] = attr.value.to_s
-        acc
-      end
-     
-      hash.delete parent_name
-      
-      hash
-    end
-
-    def to_json
-      serializable_hash.to_json
-    end
-
     module ClassMethods
       
       def embedded_classes
@@ -133,7 +118,7 @@ module HyperMapper
 
       def embeds_many(children, options={})
         
-        attribute children
+        attribute children, embedded: true
 
         child_class = children.to_s.classify.constantize
         
@@ -151,7 +136,7 @@ module HyperMapper
       def embedded_in(parent, options={})
         @embedded = true
         
-        attribute parent
+        attribute parent, embedded_in: true
         alias_method :parent, parent
         alias_method 'parent=', "#{parent}="
 

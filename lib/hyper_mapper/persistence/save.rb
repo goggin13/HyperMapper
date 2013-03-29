@@ -51,5 +51,3 @@ module HyperMapper
       end
   end
 end
- 
-

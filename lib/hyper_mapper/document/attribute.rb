@@ -16,12 +16,20 @@ module HyperMapper
         @key_name = v
         validates_presence_of v
       end
+      
+      def attributes
+        @attributes ||= {}
+      end
 
       def attributes_map 
         @attributes_map ||= {}
       end
       
       def create_attribute(name, params)
+        unless params[:embedded] || params[:embedded_in]
+          @attributes ||= {}
+          @attributes[name] = name
+        end
         attributes_map[name] = Attribute.new(name, params)
       end
       
@@ -32,7 +40,7 @@ module HyperMapper
       def autogenerate_id(name=:id, params={})
         attribute name, params.merge(key: true, autogenerate: true)
       end
-      
+
       def attribute(name, params={})
         
         create_attribute(name, params) 
@@ -55,6 +63,7 @@ module HyperMapper
     end
     
     class Attribute
+      attr_reader :name
 
       def initialize(name, options={})
         @name = name
@@ -119,6 +128,14 @@ module HyperMapper
       @attribute_values ||= {}
     end
     
+    def attributes
+      res = {}
+      self.class.attributes.each do |k, v|
+        res[k] = attribute_values_map[k]
+      end
+      res
+    end
+
     def clean_attributes!
       attribute_values_map.each do |k, v|
         v.dirty = false
