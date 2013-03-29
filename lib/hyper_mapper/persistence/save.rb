@@ -18,6 +18,10 @@ module HyperMapper
     end
     
     def save_inner
+      if persisted? && attribute_values_map[self.class.key_name].dirty?
+        raise Exceptions::IllegalKeyModification.new("Key #{self.class.key_name} cannot be modified")
+      end
+
       if self.class.embedded?
         to_add = {}
         hash = serializable_hash

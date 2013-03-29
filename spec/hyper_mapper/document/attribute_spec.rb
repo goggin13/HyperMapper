@@ -28,14 +28,14 @@ describe 'HyperMapper::Document::Attribute' do
       end
 
       it "should set the fields value" do
-        @instance.field_name = "a string"
-        @instance.field_name.should == "a string"
+        @instance.field_name = 'a string'
+        @instance.field_name.should == 'a string'
       end
 
       it "should overwrite an existing value" do
-        @instance.field_name = "a string"
-        @instance.field_name = "a second string"
-        @instance.field_name.should == "a second string"
+        @instance.field_name = 'a string'
+        @instance.field_name = 'a second string'
+        @instance.field_name.should == 'a second string'
       end
     end
     
@@ -70,7 +70,18 @@ describe 'HyperMapper::Document::Attribute' do
     end
 
     it "should should validate presence of the key" do
-      AttributeTestClass.new(field_name: "test").should_not be_valid
+      AttributeTestClass.new(field_name: 'test').should_not be_valid
+    end
+
+    it "should raise an error if it is modified" do
+      @instance = AttributeTestClass.new(field_name: 'test', key_name: 'key')
+      @client = stub_client
+      stub_any_put 'attribute_test_classes'
+      @instance.save
+      @instance.key_name = 'new'
+      expect {
+        @instance.save
+      }.to raise_error HyperMapper::Exceptions::IllegalKeyModification
     end
   end
 end

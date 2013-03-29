@@ -98,6 +98,7 @@ module HyperMapper
       def create!(attrs)
         child = @klass.load_from_attrs(attrs)
         child.parent = @parent
+        child.persisted = false
         child.save
         self.<< child
         child

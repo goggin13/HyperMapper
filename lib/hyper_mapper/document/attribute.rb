@@ -89,6 +89,10 @@ module HyperMapper
         @value = v
         @dirty = true
       end
+
+      def dirty?
+        @dirty
+      end
     end
     
     def random_string
