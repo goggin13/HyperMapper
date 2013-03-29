@@ -1,9 +1,11 @@
-<p id="notice"><%= notice %></p>
 
 <p>
   <b>Id:</b>
   <%= @post.id %>
 </p>
+
+<p>
+  Posted by <%= link_to @post.user.username, user_path(@post.user) %>.
 
 <p>
   <b>Title:</b>

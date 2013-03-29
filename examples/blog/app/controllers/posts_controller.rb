@@ -83,7 +83,15 @@ class PostsController < ApplicationController
     @post.destroy
 
     respond_to do |format|
-      format.html { redirect_to user_posts_url(@user) }
+      format.html { redirect_to user_path(@user), notice: "Deleted post #{@post.id}" }
+      format.json { head :no_content }
+    end
+  end
+
+  def search
+    @query = params[:query]
+    respond_to do |format|
+      format.html 
       format.json { head :no_content }
     end
   end
