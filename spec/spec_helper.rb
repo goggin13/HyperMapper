@@ -46,11 +46,15 @@ def stub_any_put(space, ret=true)
 end
 
 def stub_auto_id_put(space, attrs, ret=true)
+  auto_id = nil
   @client.should_receive(:put) do |s, id, args|
     id.length.should == 32
+    auto_id = id
     space.should == s
     args.should == attrs
   end.and_return(ret)
+
+  auto_id
 end
 
 def stub_search(space, predicate, result)

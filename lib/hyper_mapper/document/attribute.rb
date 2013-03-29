@@ -7,6 +7,10 @@ module HyperMapper
       def key_name
         @key_name ? @key_name.to_sym : nil
       end
+      
+      def foreign_key
+        "#{self.model_name.underscore}_#{key_name}"
+      end
 
       def key_name=(v)
         @key_name = v
@@ -23,6 +27,10 @@ module HyperMapper
       
       def key(name, params={})
         attribute name, params.merge(key: true)
+      end
+
+      def autogenerate_id(name=:id, params={})
+        attribute name, params.merge(key: true, autogenerate: true)
       end
       
       def attribute(name, params={})

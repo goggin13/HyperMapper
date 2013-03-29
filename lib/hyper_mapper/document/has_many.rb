@@ -2,6 +2,7 @@ module HyperMapper
   module Document
     
     class HasManyCollection
+      include Enumerable
       attr_accessor :foreign_key
 
       def initialize(options={})
@@ -31,8 +32,8 @@ module HyperMapper
         self.send('[]', 0)
       end
 
-      def length
-        all.length
+      def each
+        all.each { |r| yield(r) }
       end
 
       def create!(attrs)
