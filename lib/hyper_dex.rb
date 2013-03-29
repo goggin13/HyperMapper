@@ -100,6 +100,9 @@ module HyperDex
     def async_map_string_append(space, key, value) end
     def async_set_union(space, key, value) end
     def loop() end
+    
+    def add_space() end
+    def rm_space() end
 
     def create_space
        cmd = '/home/goggin/projects/install/bin/hyperdex '

@@ -16,7 +16,8 @@ describe 'HyperMapper::Document::Serialization' do
 
   describe "to_json" do
     it "should return a JSON representation" do
-      @user.to_json.should == @user.serializable_hash.to_json
+      user_json = "{\"user\":{\"email\":\"matt@example.com\",\"username\":\"goggin13\"}}"
+      @user.to_json.should == user_json
     end
   end
 end
