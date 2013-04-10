@@ -1,0 +1,95 @@
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title>HyperMapper</title>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+<div id="wrapper">
+	<div id="header-wrapper">
+		<div id="header">
+			<div id="logo">
+        <h1>
+          <%= image_tag 'hyperdex.png' %>
+          <%= link_to 'HyperMapper', root_path %>
+        </h1>
+				<p>Template design by <a href="http://www.freecsstemplates.org/">FCT</a></p>
+			</div>
+			<div id="menu">
+				<ul>
+					<li><span><%= link_to "Home", root_path %></span></li>
+					<% if signed_in? %>
+					  <li><span><%= link_to "Post", new_post_path %></span></li>
+					  <li><span><%= link_to "My Posts", posts_path %></span></li>
+					  <li><span><%= link_to "My Account", edit_user_path(current_user) %></span></li>
+            <li><span>
+                  <%= link_to "Sign out", session_path(id: current_user.session_id), method: :delete %>
+                </span>
+            </li>
+					<% else %>
+					  <li><span><%= link_to "Sign up", new_user_path %></span></li>
+					  <li><span><%= link_to "Sign in", new_session_path %></span></li>
+					<% end %>
+					
+				</ul>
+			</div>
+		</div>
+	</div>
+	<!-- end #header -->
+	<div id="page">
+    <div id="content">
+      <% flash.each do |key, value| %>
+          <div class="alert alert-<%= key %>"><%= value %></div>
+      <% end %> 
+      <%= yield %>
+		</div>
+		<div id="sidebar">
+			<ul>
+				<li>
+					<h2>Search</h2>
+					<div id="search" >
+            <form method="get" action="<%= search_path %>">
+							<div>
+								<input type="text" name="query" id="search-text" value="" />
+								<input type="submit" id="search-submit" value="GO" />
+							</div>
+						</form>
+					</div>
+					<div style="clear: both;">&nbsp;</div>
+				</li>
+				<li>
+					<h2>Tags</h2>
+					<ul>
+						<li><a href="#">Aliquam libero</a></li>
+						<li><a href="#">Urnanet non molestie semper</a></li>
+						<li><a href="#">Proin gravida orci porttitor</a></li>
+					</ul>
+				</li>
+				<li>
+					<h2>Blogroll</h2>
+					<ul>
+						<li><a href="#">Aliquam libero</a></li>
+						<li><a href="#">Consectetuer adipiscing elit</a></li>
+						<li><a href="#">Metus aliquam pellentesque</a></li>
+						<li><a href="#">Suspendisse iaculis mauris</a></li>
+						<li><a href="#">Urnanet non molestie semper</a></li>
+						<li><a href="#">Proin gravida orci porttitor</a></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+
+		<!-- end #content -->
+		<div style="clear: both;">&nbsp;</div>
+	</div>
+	<!-- end #page -->
+</div>
+<div id="footer">
+	<p>Design by <a href="http://www.freecsstemplates.org/">FCT</a>.</p>
+</div>
+<!-- end #footer -->
+</body>
+</html>
