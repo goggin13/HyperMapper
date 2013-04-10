@@ -1,4 +1,4 @@
-#require 'hyperclient'
+require 'hyperclient'
 
 module HyperDex
 
@@ -43,6 +43,10 @@ module HyperDex
       @client.map_remove space, key, map_key
     end
     
+    def map_add(space, key, map_key, map_value)
+      @client.map_add space, key, map_key, map_value
+    end
+
     def cond_put(space, key, condition, attrs) end
     def atomic_add(space, key, value) end
     def atomic_sub(space, key, value) end

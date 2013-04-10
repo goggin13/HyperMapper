@@ -36,4 +36,3 @@ client.put 'users', 'test', [
 ]
 
 puts client.get 'users', 'test'
-pust 'test 2 done'
