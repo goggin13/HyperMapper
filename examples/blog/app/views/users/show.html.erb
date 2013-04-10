@@ -13,6 +13,11 @@
   <%= @user.email %>
 </p>
 
+<p>
+Created at <%= @user.created_at.strftime("%-m-%-d %k:%M:%S") %>, 
+modified at <%= @user.updated_at.strftime("%-m-%-d %k:%M:%S") %>
+</p>
+
 <%= link_to 'New Post', new_user_post_path(@user) %> | 
 <%= link_to 'Edit', edit_user_path(@user) %> |
 <%= link_to 'Back', users_path %>

@@ -45,7 +45,7 @@ module HyperMapper
       def remove(id)
         @elements.delete(id) if @elements.has_key?(id)
       end
-
+      
       def <<(item)
         @elements[item.key_value] = item
         item.parent = @parent

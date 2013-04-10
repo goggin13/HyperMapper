@@ -25,6 +25,18 @@ describe 'HyperMapper::Document::Timestamps' do
     it "should add an updated_at attribute" do
       @user.should respond_to :updated_at
     end
+    
+    it "should return a time for created_at" do
+      @user.created_at = 1
+      @user.created_at.should == Time.at(1)
+      @user.created_at.should be_a Time
+    end
+
+    it "should return a time for updated_at" do
+      @user.updated_at = 1
+      @user.updated_at.should == Time.at(1)
+      @user.updated_at.should be_a Time
+    end
 
     it "should send created_at and updated_at on initial create" do
       stub_put 'user_with_timestamps', 'matt', @attrs

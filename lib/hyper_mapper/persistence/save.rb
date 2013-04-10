@@ -19,13 +19,16 @@ module HyperMapper
     
     def save_inner
       if self.class.embedded?
-        to_add = {}
-        hash = serializable_hash
-        hash.delete self.class.key_name
-        to_add[key_value] = hash.to_json
-        persisted = HyperMapper::Config.client.map_add parent.class.space_name,
-                                                        parent.key_value,
-                                                        to_add
+        #f = self.model_name.underscore.pluralize
+        #to_add = parent.send(f)
+        #hash = serializable_hash
+        #hash.delete self.class.key_name
+        #to_add << self 
+        #parent.send("#{f}=", to_add)
+        #persisted = HyperMapper::Config.client.map_add parent.class.space_name,
+        #                                                parent.key_value,
+        #                                                to_add
+        (self.persisted = parent.send(:persist)) if valid?
       else
         (self.persisted = persist) if valid?
       end
