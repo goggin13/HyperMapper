@@ -26,6 +26,12 @@ modified at <%= @user.updated_at.strftime("%-m-%-d %k:%M:%S") %>
 <% @user.posts.each do |post| %>
   <hr/>
   <h5><%= post.title %></h5>
+
+  <p>
+  Created at <%= @user.created_at.strftime("%-m-%-d %k:%M:%S") %>, 
+  modified at <%= @user.updated_at.strftime("%-m-%-d %k:%M:%S") %>
+  </p>
+
   <p><%= post.content %></p>
   <p><%= link_to 'Edit', edit_user_post_path(@user, post) %></p>
   <p><%= link_to 'Destroy', user_post_path(@user, post), method: :delete, data: {confirm: "Really delete?" } %></p>

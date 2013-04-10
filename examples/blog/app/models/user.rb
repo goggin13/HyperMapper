@@ -2,8 +2,9 @@ require 'hyper_mapper'
 
 class User
   include HyperMapper::Document
-
-  key :username
+  
+  key :id, autogenerate: true
+  attribute :username
   attribute :first
   attribute :last
   attribute :email

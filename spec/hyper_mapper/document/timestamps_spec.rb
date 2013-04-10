@@ -53,5 +53,11 @@ describe 'HyperMapper::Document::Timestamps' do
       stub_put 'user_with_timestamps', 'matt', @attrs
       @user.save
     end
+
+    it "should work on embedded classes" do
+      stub_put 'user_with_timestamps', 'matt', @attrs
+      @user.save
+      #@attrs[:posts] = {
+    end
   end
 end

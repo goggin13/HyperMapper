@@ -4,8 +4,9 @@ system "/home/goggin/projects/install/bin/hyperdex rm-space users"
 create = <<-BASH
 /home/goggin/projects/install/bin/hyperdex add-space <<EOF
 space users 
-key username
+key id 
 attributes 
+  username,
   first, 
   last, 
   email, 
@@ -18,3 +19,5 @@ EOF
 BASH
 
 system create
+
+#system "/home/goggin/projects/install/bin/hyperdex rm-space "

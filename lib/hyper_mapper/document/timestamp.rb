@@ -7,13 +7,13 @@ module HyperMapper
          
          alias_method :created_at_raw, :created_at
          define_method :created_at_to_time do
-           Time.at(created_at_raw)
+           Time.at(created_at_raw.to_i)
          end
          alias_method :created_at, :created_at_to_time
 
          alias_method :updated_at_raw, :updated_at
          define_method :updated_at_to_time do
-           Time.at(updated_at_raw)
+           Time.at(updated_at_raw.to_i)
          end
          alias_method :updated_at, :updated_at_to_time
         
