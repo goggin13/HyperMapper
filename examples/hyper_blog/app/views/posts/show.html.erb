@@ -13,6 +13,6 @@
   <%= @post.formatted_tags %>
 </p>
 
-<% if current_user.id == @post.user_id %>
+<% if signed_in? && current_user.id == @post.user_id %>
   <%= link_to 'Edit', edit_post_path(@post) %>
 <% end %>

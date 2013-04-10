@@ -23,7 +23,6 @@
 					<li><span><%= link_to "Home", root_path %></span></li>
 					<% if signed_in? %>
 					  <li><span><%= link_to "Post", new_post_path %></span></li>
-					  <li><span><%= link_to "My Posts", posts_path %></span></li>
 					  <li><span><%= link_to "My Account", edit_user_path(current_user) %></span></li>
             <li><span>
                   <%= link_to "Sign out", session_path(id: current_user.session_id), method: :delete %>
@@ -71,12 +70,9 @@
 				<li>
 					<h2>Blogroll</h2>
 					<ul>
-						<li><a href="#">Aliquam libero</a></li>
-						<li><a href="#">Consectetuer adipiscing elit</a></li>
-						<li><a href="#">Metus aliquam pellentesque</a></li>
-						<li><a href="#">Suspendisse iaculis mauris</a></li>
-						<li><a href="#">Urnanet non molestie semper</a></li>
-						<li><a href="#">Proin gravida orci porttitor</a></li>
+					  <% @todays_posts.each do |p| %>
+					    <li><%= link_to p.title, p %></li>
+					  <% end %>
 					</ul>
 				</li>
 			</ul>

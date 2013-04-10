@@ -3,7 +3,7 @@ class PostsController < ApplicationController
   # GET /posts
   # GET /posts.json
   def index
-    @posts = current_user.posts
+    @posts = Post.order("created_at DESC").limit(50)
 
     respond_to do |format|
       format.html # index.html.erb

@@ -12,11 +12,15 @@ class Post < ActiveRecord::Base
     tags.collect(&:name).join ', ' 
   end
   
+  def add_tag(tag)
+    tags << tag unless tags.include? tag
+  end
+  
   def update_tags
+    return unless tag_string
     new_tag_names = tag_string.split(",").map { |t| t.strip.downcase }
     new_tag_names.each do |tag_name| 
-      t = tags.find_or_create_by_name(tag_name) 
-      tags << t unless tags.include? t
+      add_tag tags.find_or_create_by_name(tag_name) 
     end
     tags.each { |t| (tags.delete t) unless (new_tag_names.include? t.name) }
   end
