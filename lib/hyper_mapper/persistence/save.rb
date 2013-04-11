@@ -34,7 +34,7 @@ module HyperMapper
         #                                                to_add
         (self.persisted = parent.send(:persist)) if valid?
       else
-        (self.persisted = persist) if valid?
+        persist if valid?
       end
 
       @persisted
@@ -54,7 +54,7 @@ module HyperMapper
       def persist
         return false unless key_value
         attrs = attributes_for_save
-        HyperMapper::Config.client.put(self.class.space_name, key_value, attrs)
+        self.persisted = HyperMapper::Config.client.put(self.class.space_name, key_value, attrs)
       end
   end
 end

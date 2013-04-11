@@ -1,0 +1,18 @@
+<p>
+  <b>Title:</b>
+  <%= @post.title %>
+</p>
+
+<p>
+  <b>Content:</b>
+  <%= @post.content %>
+</p>
+
+<p>
+  <b>Tags:</b>
+  <%= @post.formatted_tags %>
+</p>
+
+<% if signed_in? && current_user.id == @post.user_id %>
+  <%= link_to 'Edit', edit_post_path(@post) %>
+<% end %>

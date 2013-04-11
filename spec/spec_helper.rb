@@ -63,27 +63,7 @@ def stub_search(space, predicate, result)
          .and_return(result)
 end
 
-def stub_map_remove(space, key, map, ret=true)
-  @client.should_receive(:map_remove)
-         .with(space, key, map)
-         .and_return(ret)
-end
-
-def stub_map_add(space, key, map, ret=true)
-  @client.should_receive(:map_add)
-         .with(space, key, map)
-         .and_return(ret)
-end
-
-def stub_map_add(space, key, map_key, map_value, ret=true)
-  to_add = {}
-  to_add[map_key] = map_value
-  @client.should_receive(:map_add)
-         .with(space, key, to_add)
-         .and_return(ret)
-end
-
-def stub_auto_id_map_add(space, key, value, ret=true)
+def stub_embedded_auto_id_put(space, key, value, ret=true)
   @client.should_receive(:map_add) do |s, k, m|
      s.should == space
      k.should == key

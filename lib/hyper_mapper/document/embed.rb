@@ -44,6 +44,7 @@ module HyperMapper
 
       def remove(id)
         @elements.delete(id) if @elements.has_key?(id)
+        @parent.save
       end
       
       def <<(item)
@@ -99,8 +100,8 @@ module HyperMapper
         child = @klass.load_from_attrs(attrs)
         child.parent = @parent
         child.persisted = false
-        child.save
         self.<< child
+        child.save
         child
       end
 

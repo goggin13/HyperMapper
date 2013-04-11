@@ -1,0 +1,11 @@
+<h1>Posts</h1>
+
+<ul>
+
+<% @posts.each do |post| %>
+  <li><%= post.created_at.strftime("%m-%d-%y") %> | <%= link_to post.title, post %></li>
+<% end %>
+
+</ul>
+
+<br />

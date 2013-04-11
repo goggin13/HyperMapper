@@ -30,6 +30,7 @@ module HyperDex
     end
     
     def search(space, predicate)
+      puts "search #{space} => #{predicate}"
       r = @client.search space, predicate
       arr = []
       while r.has_next
