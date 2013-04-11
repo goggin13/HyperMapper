@@ -19,7 +19,7 @@ module HyperMapper
         end
       end
 
-      success
+      success ? self : false
     end
     
     def save_inner

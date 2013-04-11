@@ -47,7 +47,7 @@ namespace :db do
           c = post.comments.create! text: Faker::Lorem.words(12).join(" "),
                                     user_id: user_ids.shuffle[0]
           c.created_at = random_time.to_i
-          c.save
+          puts "COMMENT FAILED" if !c.save
         }
       end
     end
