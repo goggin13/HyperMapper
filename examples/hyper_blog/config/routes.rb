@@ -1,6 +1,11 @@
 HyperBlog::Application.routes.draw do
 
-  resources :posts
+  
+
+  resources :posts do
+    resources :comments, only: [:create, :destroy]
+  end
+  
   get 'search' => 'posts#search'
   
   resources :sessions, only: [:new, :create, :destroy]

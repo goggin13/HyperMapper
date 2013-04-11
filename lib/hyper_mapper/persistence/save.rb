@@ -5,16 +5,21 @@ module HyperMapper
     attr_accessor :persisted
 
     def save
-      callbacks = persisted? ? [:save] : [:save, :create]
+      success = true
       run_callbacks :save do
-        if persisted? 
-          save_inner
-        else
-          run_callbacks :create do
+        success = valid?
+        if success
+          if persisted? 
             save_inner
+          else
+            run_callbacks :create do
+              save_inner
+            end
           end
         end
       end
+
+      success
     end
     
     def save_inner
@@ -23,18 +28,9 @@ module HyperMapper
       end
 
       if self.class.embedded?
-        #f = self.model_name.underscore.pluralize
-        #to_add = parent.send(f)
-        #hash = serializable_hash
-        #hash.delete self.class.key_name
-        #to_add << self 
-        #parent.send("#{f}=", to_add)
-        #persisted = HyperMapper::Config.client.map_add parent.class.space_name,
-        #                                                parent.key_value,
-        #                                                to_add
-        (self.persisted = parent.send(:persist)) if valid?
+        self.persisted = parent.send(:persist)
       else
-        persist if valid?
+        persist
       end
 
       @persisted

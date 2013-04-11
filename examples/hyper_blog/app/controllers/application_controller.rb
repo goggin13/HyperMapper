@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
   
   def set_todays_posts
     t1 = Time.now.advance(days: -3).beginning_of_day
-    @todays_posts = Post.where(["created_at > ?", t1])
+    @todays_posts = [] #Post.where("created_at" => [t1, Time.now.to_i])
+    @tags = Tag.where(order: :name, sort: :asc)
   end
 end

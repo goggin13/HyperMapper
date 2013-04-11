@@ -20,17 +20,17 @@
 			</div>
 			<div id="menu">
 				<ul>
-					<li><span><%= link_to "Home", root_path %></span></li>
+					<li><%= link_to raw("<span>Home</span>"), root_path %></li>
 					<% if signed_in? %>
-					  <li><span><%= link_to "Post", new_post_path %></span></li>
-					  <li><span><%= link_to "My Account", edit_user_path(current_user) %></span></li>
-            <li><span>
-                  <%= link_to "Sign out", session_path(id: current_user.session_id), method: :delete %>
-                </span>
+					  <li><%= link_to raw("<span>Post</span>"), new_post_path %></li>
+					  <li><%= link_to raw("<span>My Account</span>"), edit_user_path(current_user) %></li>
+            <li>
+                  <%= link_to raw("<span>Sign out</span>"), session_path(id: current_user.session_id), method: :delete %>
+                
             </li>
 					<% else %>
-					  <li><span><%= link_to "Sign up", new_user_path %></span></li>
-					  <li><span><%= link_to "Sign in", new_session_path %></span></li>
+					  <li><%= link_to raw("<span>Sign up</span>"), new_user_path %></li>
+					  <li><%= link_to raw("<span>Sign in</span>"), new_session_path %></li>
 					<% end %>
 					
 				</ul>
@@ -61,11 +61,11 @@
 				</li>
 				<li>
 					<h2>Tags</h2>
-					<ul>
-						<li><a href="#">Aliquam libero</a></li>
-						<li><a href="#">Urnanet non molestie semper</a></li>
-						<li><a href="#">Proin gravida orci porttitor</a></li>
-					</ul>
+					<p>
+						<% @tags.each do |tag| %>
+							<%= render partial: "tags/tag", locals: {tag: tag} %> |
+						<% end %>
+					</p>
 				</li>
 				<li>
 					<h2>Blogroll</h2>

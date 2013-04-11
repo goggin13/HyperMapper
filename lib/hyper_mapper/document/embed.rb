@@ -102,6 +102,7 @@ module HyperMapper
         child.persisted = false
         self.<< child
         child.save
+        self.<< child
         child
       end
 

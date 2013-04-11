@@ -17,6 +17,7 @@ module HyperMapper
       sort = params.delete :sort
       results = HyperMapper::Config.client.search(space_name, params)
       if order
+        order = order.to_s
         if sort == :desc
           results.sort! { |b, a| a[order] <=> b[order] }
         else

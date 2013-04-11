@@ -2,7 +2,7 @@ module SessionHelper
   
   def sign_in(user)
     user.session_id = SecureRandom.hex(16)
-    user.save!    
+    user.save 
     cookies[:session_id] = user.session_id
     self.current_user = user
   end
@@ -17,7 +17,7 @@ module SessionHelper
   
   def current_user
     if cookies[:session_id]
-      @current_user ||= User.find_by_session_id(cookies[:session_id])
+      @current_user ||= User.where(session_id: cookies[:session_id])[0]
     else
       nil
     end

@@ -13,6 +13,7 @@ module HyperMapper
       end
       
       def child_ids
+        return [] unless @parent.key_value
         params = {}
         params[@parent_class.foreign_key] = @parent.key_value
         @join_class.where(params).map { |r| r.send(@klass.foreign_key) }
@@ -20,8 +21,13 @@ module HyperMapper
 
       def child_collection 
         params = {}
-        params[@klass.foreign_key] = child_ids
-        @klass.where(params)
+        child_ids.inject([]) do |acc, id|
+          c = @klass.find(id)
+          acc << c if c
+          acc
+        end
+        # params[@klass.key_name.to_s] = child_ids
+        # @klass.where(params)
       end
 
       def collection
@@ -51,6 +57,12 @@ module HyperMapper
         item = @klass.create! params
         self.<< item
         item
+      end
+
+      def build(params={})
+        item = @klass.new params
+        self.<< item
+        item 
       end
 
       def find(id)

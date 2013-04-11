@@ -5,7 +5,7 @@ class User
   
   attr_accessor :password
 
-  key :id, autogenerate: true 
+  autogenerate_id
   attribute :username
   attribute :bio  
   attribute :salt
@@ -34,7 +34,7 @@ class User
   end
 
   def self.authenticate(username, plain_text_password)
-    user = User.find_by_username(username)
+    user = User.where(username: username)[0]
     return nil unless user && user.has_password?(plain_text_password)
     user
   end

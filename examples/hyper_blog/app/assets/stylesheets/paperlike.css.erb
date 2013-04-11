@@ -8,7 +8,7 @@ Released for free under a Creative Commons Attribution 2.5 License
 body {
 	margin: 0;
 	padding: 0;
-  background: #FFFFFF url(<%= asset_path('img01.jpg') %>) repeat-x left top;
+	background: #FFFFFF url(<%= asset_path 'img01.jpg' %>) repeat-x left top;
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 14px;
 	color: #3C3D3F;
@@ -72,14 +72,10 @@ a:hover {
 
 #logo {
 	float: left;
-	width: 450px;
+	width: 350px;
 	margin: 0;
 	padding: 0;
 	color: #000000;
-}
-
-#logo img {
-  float: left;
 }
 
 #logo h1, #logo p {
@@ -89,12 +85,13 @@ a:hover {
 	margin-left: 30px;
 	padding: 20px 0px 0px 0px;
 	letter-spacing: -1px;
+	text-transform: lowercase;
 	font-size: 3.8em;
 	color: #FF3000;
 }
 
 #logo p {
-	margin: 30px;
+	margin: -5px 0px 0px 0px;
 	padding: 0px 0 0 32px;
 	text-transform: lowercase;
 	font: normal 14px Georgia, "Times New Roman", Times, serif;
@@ -188,19 +185,19 @@ a:hover {
 #menu span {
 	display: inline-block;
 	height: 28px;
-	padding: 10px 18px;
+	padding: 10px 30px 0px 30px;
 }
 
-#menu li.active {
+#menu li:hover {
 	background: #1CB543;
 }
 
-#menu li.active a {
-  background: url(<%= asset_path('img02.jpg') %>) no-repeat left top;
+#menu li:hover a {
+	background: url(<%= asset_path 'img02.jpg' %>) no-repeat left top;
 }
 
-#menu li.active span {
-  background: url(<%= asset_path('img03.jpg') %>) no-repeat right top;
+#menu li:hover span {
+	background: url(<%= asset_path 'img03.jpg' %>) no-repeat right top;
 	color: #FFFFFF;
 }
 
@@ -318,9 +315,6 @@ a:hover {
 	border-bottom: 1px solid #CFCFCF;
 	border-left: none;
 	text-align: left;
-  width: 250px;
-  height: 35px;
-  overflow: hidden;
 }
 
 #sidebar li li span {
@@ -333,14 +327,14 @@ a:hover {
 
 #sidebar li li a {
 	padding: 0px 0px 0px 20px;
-  background: url(<%= asset_path('img05.jpg') %>) no-repeat left 5px;
+	background: url(<%= asset_path 'img05.jpg' %>) no-repeat left 5px;
 }
 
 #sidebar h2 {
 	height: 30px;
 	margin: 0px 0px 20px 0px;
 	padding: 2px 0px 0px 30px;
-  background: url(<%= asset_path('img04.jpg') %>) no-repeat left top;
+	background: url(<%= asset_path 'img04.jpg' %>) no-repeat left top;
 	text-align: left;
 	text-transform: uppercase;
 	letter-spacing: -.5px;
@@ -423,4 +417,23 @@ a:hover {
 
 #about a {
 	color: #1CB543;
+}
+
+
+/* MPG */
+#logo img {
+	position: absolute;
+	left: -35px;
+}
+
+#logo {
+	position: relative;
+}
+
+#header {
+	overflow: visible;
+}
+
+ul, ol {
+	list-style: none;
 }

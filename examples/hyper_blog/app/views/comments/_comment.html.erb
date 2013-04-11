@@ -1,0 +1,12 @@
+<% user = comment.user %>
+<li id="comment_<%= comment.id %>">
+	<%= link_to user.username, user %><br/>
+	<%= comment.text %><br/>
+	<%= comment.created_at.strftime("%-m-%-d %k:%M:%S") %>
+	<% if signed_in? && current_user.id == comment.user_id %>
+		<%= link_to "Delete", [@post, comment], 
+							  method: :delete, 
+							  remote: true,
+							  data: { confirm: 'Are you sure?'} %>
+	<% end %>
+</li>

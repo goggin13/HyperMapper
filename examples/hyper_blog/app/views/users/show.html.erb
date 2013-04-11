@@ -4,6 +4,16 @@
 </p>
 
 <p>
+	<b>Created at:</b>
+	<%= @user.updated_at.strftime("%-m-%-d %k:%M:%S") %>
+</p>
+
+<p>
+	<b>Modified at:</b>
+	<%= @user.updated_at.strftime("%-m-%-d %k:%M:%S") %>
+</p>
+
+<p>
   <b>Bio:</b>
   <%= @user.bio %>
 </p>

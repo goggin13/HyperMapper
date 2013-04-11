@@ -3,7 +3,14 @@ class PostsController < ApplicationController
   # GET /posts
   # GET /posts.json
   def index
-    @posts = Post.order("created_at DESC").limit(50)
+    if params[:tag_id]
+      @tag = Tag.find(params[:tag_id])
+      @title = "Posts tagged with \"#{@tag.name}\""
+      @posts = @tag.posts.sort { |a,b| a.created_at <=> b.created_at }
+    else
+      @title = "All Posts"
+      @posts = Post.where(order: :created_at, sort: :desc)
+    end
 
     respond_to do |format|
       format.html # index.html.erb
@@ -15,7 +22,8 @@ class PostsController < ApplicationController
   # GET /posts/1.json
   def show
     @post = Post.find(params[:id])
-
+    @user =  @post.user
+    
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @post }

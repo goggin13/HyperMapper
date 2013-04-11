@@ -30,6 +30,11 @@ module HyperDex
     end
     
     def search(space, predicate)
+      predicate = predicate.inject({}) { |acc, (k, v)| 
+        k = k.to_s if k.is_a? Symbol
+        acc[k] = v
+        acc
+      }
       puts "search #{space} => #{predicate}"
       r = @client.search space, predicate
       arr = []

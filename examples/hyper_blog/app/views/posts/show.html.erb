@@ -1,18 +1,39 @@
-<p>
-  <b>Title:</b>
-  <%= @post.title %>
-</p>
+<div class="post">
+  <h2 class="title">
+    <a href="#"><%= @post.title %></a>
+  </h2>
+  <p class="meta">
+    <span class="author">
+      <%= link_to @user.username, @user %>
+    </span>&nbsp;
+    <span class="date">October 07, 2011</span>&nbsp;
+    <% @post.tags.each do |tag| %>
+      <span class="links">
+        <%= render partial: "tags/tag", locals: {tag: tag} %>
+      </span>
+    <% end %> 
+  </p>
+  <div class="entry">
+    <%= @post.content %>
+  </div>
 
-<p>
-  <b>Content:</b>
-  <%= @post.content %>
-</p>
+  <% if signed_in? %>
 
-<p>
-  <b>Tags:</b>
-  <%= @post.formatted_tags %>
-</p>
+  <% if current_user.id == @post.user_id %>
+    <%= link_to 'Edit', edit_post_path(@post) %>
+  <% end %>
 
-<% if signed_in? && current_user.id == @post.user_id %>
-  <%= link_to 'Edit', edit_post_path(@post) %>
-<% end %>
+  <%= form_for(:comment, url: post_comments_path(@post), remote: true) do |f| %>
+      <%= f.text_field :text, autocomplete: :off %><br/>
+      <%= f.hidden_field :post_id, value: @post.id %>
+      <%= f.submit "Comment" %>
+    <% end %>
+  <% end %>
+
+  <ul id="post_comments">
+    <% @post.comments.each do |comment| %>
+      <%= render partial: "comments/comment", locals: {comment: comment} %>
+    <% end %>
+  </ul>
+
+</div>

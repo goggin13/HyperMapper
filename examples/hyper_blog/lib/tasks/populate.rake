@@ -14,35 +14,41 @@ namespace :db do
     
     User.create! username: "goggin13", password: "password"
     
-    # tags = (0..20).map do |n|
-    #   Tag.create! name: Faker::Lorem.words(1)[0]
-    # end
+    tags = (0..20).map do |n|
+      Tag.create! name: Faker::Lorem.words(1)[0]
+    end
     
-    100.times do |n|
+    user_ids = []
+
+    50.times do |n|
       user = User.create!(username: Faker::Internet.user_name.gsub('.', ''),
                           password: "password",
                           bio: Faker::Lorem.paragraphs(1)[0])
+      user_ids << user.id
       user.created_at = random_time.to_i
       if user.save
         puts "Created new user, #{user.id} | #{user.username}"
       else
         puts "failed"
       end
-      25.times do |i|
+      1.times do |i|
         post = user.posts.create!(title: Faker::Company.bs,
                                   content: Faker::Lorem.paragraphs(3).join("\n"))
-      #   4.times { post.add_tag tags.shuffle[0] }
+        4.times { post.add_tag tags.shuffle[0] }
         puts post.valid?
-        puts post.id
-        puts post.title
-        puts post
         post.created_at = random_time.to_i
         if post.save
-          puts "new post #{post.title}"
+          # puts "new post #{post.title}"
         else
           puts "failed to create post"
-          puts post.errors.full_messages
         end
+
+        10.times { 
+          c = post.comments.create! text: Faker::Lorem.words(12).join(" "),
+                                    user_id: user_ids.shuffle[0]
+          c.created_at = random_time.to_i
+          c.save
+        }
       end
     end
   end

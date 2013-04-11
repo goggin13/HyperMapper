@@ -37,8 +37,12 @@ module HyperMapper
       end
 
       def create!(attrs)
+        build(attrs).save
+      end
+
+      def build(attrs={})
         attrs[foreign_key] = @parent.key_value
-        @klass.create! attrs
+        @klass.new attrs
       end
 
       def <<(child)
