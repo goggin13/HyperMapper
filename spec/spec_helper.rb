@@ -39,6 +39,12 @@ def stub_get(space, key, ret)
            .and_return(ret)
 end
 
+def stub_multi_get(space, keys, ret)
+  @client.should_receive(:multi_get)
+           .with(space, keys)
+           .and_return(ret)
+end
+
 def stub_any_put(space, ret=true)
   @client.should_receive(:put) do |s|
     space.should == s

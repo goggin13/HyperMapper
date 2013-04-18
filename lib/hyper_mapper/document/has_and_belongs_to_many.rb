@@ -20,14 +20,7 @@ module HyperMapper
       end
 
       def child_collection 
-        params = {}
-        child_ids.inject([]) do |acc, id|
-          c = @klass.find(id)
-          acc << c if c
-          acc
-        end
-        # params[@klass.key_name.to_s] = child_ids
-        # @klass.where(params)
+        @klass.find_all(child_ids)
       end
 
       def collection

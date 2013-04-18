@@ -1,20 +1,5 @@
 require 'spec_helper'
 
-=begin
-tag article id=2 with tag id=1
-  query for tag_to_article(2, 1)
-    return if exists
-    else insert it
-
-displaying tag cloud
-  query tag_to_articles
-  with results...?
-    iterate and query tag to get name?
-
-instead of join table should tag have a list of article ids on it?
-  no, because how would an article get its tags
-=end
-
 describe 'HyperMapper::Document::HasAndBelongsToMany' do
   
   before do
@@ -73,7 +58,7 @@ describe 'HyperMapper::Document::HasAndBelongsToMany' do
       describe "collection" do
           
         before do
-          stub_search 'articles', {'article_id' => [1, 2, 3]}, [
+          stub_multi_get 'articles', [1, 2, 3], [
             {title: 'Hello world', user_id: 1, id: 1},
             {title: 'Goodbye world', user_id: 2, id: 2}
           ]
