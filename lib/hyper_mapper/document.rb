@@ -24,9 +24,15 @@ module HyperMapper
     end
 
     def initialize(params={})
+      self.class.verify_attr_accessible! params
+      load_from_params params
+    end
+    
+    def load_from_params(params)
       params.each do |key, val|
         self.send("#{key}=", val)
       end
     end
+    
   end
 end

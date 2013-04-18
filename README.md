@@ -1,30 +1,65 @@
-# HyperMapper
+# HyperMapper	
 
-An object relational mapper for
-[HyperDex](http://hyperdex.org), a searchable distributed key-value store, written in Ruby.
+## Overview
 
-## Installation
+HyperMapper is an Ruby Object Document Mapper for [HyperDex](http://hyperdex.org/), a new NoSQL store from Cornell University.  It has been tested in Ruby 1.9.3, and plays nicely with Rails 3.2.x.
 
-Add this line to your application's Gemfile:
+## Examples
+```
+class User
+  include HyperMapper::Document
+  
+  attr_accessor :password
 
-    gem 'hyper-mapper'
+  key :username
+  attribute :username
+  timestamps
 
-And then execute:
+  
+  has_many :posts
+end
 
-    $ bundle
+class Post
+  include HyperMapper::Document
 
-Or install it yourself as:
+  attr_accessor :tag_string
+  
+  autogenerate_id
+  attribute :title
+  attribute :content
+  attribute :user_id
+  timestamps
 
-    $ gem install hyper-mapper
+  belongs_to :user
 
-## Usage
+  embeds_many :comments  
+end
 
-TODO: Write usage instructions here
+class Comment
+	include HyperMapper::Document
+	
+	autogenerate_id
+	attribute :text
+	attribute :user_id
+	
+	timestamps
+	
+	belongs_to :user
+	embedded_in :post
+end
 
-## Contributing
+user = User.create! username: 'goggin13', 
+                    email: 'goggin13@gmail.com'
 
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+user.posts.create! title: 'My new post', content: 'more great content'
+```
+
+
+## Document API
+### Validations
+### Callbacks
+### Querying
+## Relationships
+### Querying
+### To Embed or Not To Embed
+

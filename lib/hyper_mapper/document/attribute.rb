@@ -17,6 +17,18 @@ module HyperMapper
         validates_presence_of v
       end
       
+      def attr_accessible(*attrs)
+        @attr_accessible = attrs
+      end
+      
+      def verify_attr_accessible!(attrs) 
+        attrs.each do |key, value|
+          unless (@attr_accessible || {}).include? key.to_sym
+            raise Exceptions::MassAssignmentException.new("#{key} cannot be modified via mass assignment")
+          end
+        end
+      end
+      
       def attributes
         @attributes ||= {}
       end

@@ -28,6 +28,7 @@ describe 'HyperMapper::Persistence' do
       before :all do
         class TestClass 
           include HyperMapper::Document
+          attr_accessible :testKey, :test
           key :testKey, autogenerate: true
           attribute :test
         end

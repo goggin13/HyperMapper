@@ -53,6 +53,14 @@ module HyperDex
       @client.map_add space, key, map_key, map_value
     end
 
+    def multi_get(space, keys) 
+      keys.map do |key| 
+        @client.async_get space, key
+      end.map do |deferredObject| 
+        deferredObject.wait()
+      end
+    end
+    
     def cond_put(space, key, condition, attrs) end
     def atomic_add(space, key, value) end
     def atomic_sub(space, key, value) end
