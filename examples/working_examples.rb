@@ -8,10 +8,12 @@ HyperMapper::Config.load_from_file path
 class Post
   include HyperMapper::Document
 
-  key :id
+  autogenerate_id
   attribute :title
   attribute :content
-
+  
+  timestamps
+  
   embedded_in :user
 end
 
@@ -19,14 +21,12 @@ class User
   include HyperMapper::Document
 
   key :username
-  attribute :first
-  attribute :last
   attribute :email
 
   embeds_many :posts
 end
 
-user = User.create! username: 'goggin13', first: 'Matt', last: 'Goggin'
+user = User.create! username: 'goggin13', email: 'goggin13@gmail.com'
 
 puts user
 
@@ -36,7 +36,7 @@ puts user.last
 
 user.first = 'george'
 user.save
-puts User.find('goggin13').first
+puts User.find('goggin13').email
 
 post = Post.new id: 1, title: "hello world", content: "safsafd"
 user.posts << post
@@ -52,7 +52,7 @@ post.save
 
 puts User.find('goggin13').posts.first.title
 
-user.posts.create! id: 2, title: 'My new post', content: 'more great content'
+user.posts.create! title: 'My new post', content: 'more great content'
 user = User.find('goggin13')
 
 puts "#{user.username} has #{user.posts.length} posts now"
