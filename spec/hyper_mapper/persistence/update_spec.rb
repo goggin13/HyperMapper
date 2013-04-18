@@ -9,6 +9,7 @@ describe 'HyperMapper::Persistence::Update' do
   before :all do
     class TestClass
       include HyperMapper::Document
+      attr_accessible :username, :email, :age
       key :username
       attribute :email
       attribute :age

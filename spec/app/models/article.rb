@@ -1,5 +1,8 @@
 class Article
   include HyperMapper::Document
+  
+  attr_accessible :id, :title, :user_id
+  
   key :id, autogenerate: true
   attribute :title
   attribute :user_id

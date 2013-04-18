@@ -38,7 +38,8 @@ module HyperMapper
     end
 
     def load_from_attrs(attrs={}, new_record=false)
-      instance = self.new(attrs)
+      instance = self.new {}
+      instance.load_from_params attrs
       instance.persisted = true
       instance
     end

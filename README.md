@@ -56,13 +56,10 @@ user.posts.create! title: 'My new post', content: 'more great content'
 
 
 ## Document API
-
+### Validations
+### Callbacks
+### Querying
 ## Relationships
-
+### Querying
 ### To Embed or Not To Embed
 
-## Validations
-
-## Callbacks
-
-## Querying

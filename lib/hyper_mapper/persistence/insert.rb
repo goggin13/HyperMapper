@@ -10,6 +10,7 @@ module HyperMapper
       end
 
       def create(params={})
+        verify_attr_accessible! params
         instance = self.new(params)
         instance.save
         instance
