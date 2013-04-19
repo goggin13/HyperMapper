@@ -51,7 +51,7 @@ describe 'HyperMapper::Document::HasMany' do
       article = @user.articles.create! title: "test"
       article.user_id.should == @user.username
       article.id.should_not be_nil
-      article.id.length.should == 32
+      article.id.length.should == 47
       article.title.should == 'test'
     end
   end

@@ -54,7 +54,7 @@ end
 def stub_auto_id_put(space, attrs, ret=true)
   auto_id = nil
   @client.should_receive(:put) do |s, id, args|
-    id.length.should == 32
+    id.length.should == 47
     auto_id = id
     space.should == s
     args.should == attrs
@@ -87,7 +87,7 @@ def stub_auto_id_map_add(space, key, value, ret=true)
      k.should == key
      m.length.should == 1
      m.each do |id, val|
-       id.length.should == 32
+       id.length.should == 47
        val.should == value
      end
   end.and_return(ret)
