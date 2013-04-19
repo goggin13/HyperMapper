@@ -32,17 +32,12 @@ module HyperMapper
       def attributes
         @attributes ||= {}
       end
-
-      def attributes_map 
-        @attributes_map ||= {}
-      end
       
       def create_attribute(name, params)
         unless params[:embedded] || params[:embedded_in]
           @attributes ||= {}
           @attributes[name] = name
         end
-        attributes_map[name] = Attribute.new(name, params)
       end
       
       def key(name, params={})
@@ -65,27 +60,20 @@ module HyperMapper
         end
 
         define_method "#{name}=" do |val|
+          if params[:type] == :int && (val.respond_to? :to_i)
+            val = val.to_i
+          elsif params[:type] == :float && (val.respond_to? :to_f)
+            val = val.to_f
+          elsif params[:type] == :datetime && (val.respond_to? :to_i)
+            val = val.to_i
+          end
           set_attribute_value name, val
         end
 
         define_method "#{name}" do
-          get_attribute_value name
+          get_attribute_value name, params[:type]
         end
       end
-    end
-    
-    class Attribute
-      attr_reader :name
-
-      def initialize(name, options={})
-        @name = name
-        @options = options
-      end
-
-      def autogenerate?
-        @options[:autogenerate]
-      end
-
     end
 
     class AttributeValue
@@ -147,7 +135,8 @@ module HyperMapper
     def attributes
       res = {}
       self.class.attributes.each do |k, v|
-        res[k] = attribute_values_map[k].name.to_s
+        v = attribute_values_map[k]
+        res[k] = v ? v.name.to_s : ""
       end
       res
     end
@@ -198,8 +187,14 @@ module HyperMapper
       end
     end
 
-    def get_attribute_value(name)
-      (attribute_values_map.has_key? name) ? attribute_values_map[name].value : nil
+    def get_attribute_value(name, type=:string)
+      attr_object = attribute_values_map[name]
+      return nil unless attr_object
+      if type == :datetime
+        Time.at attr_object.value
+      else
+        attr_object.value
+      end
     end
   end
 end

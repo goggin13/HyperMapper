@@ -4,7 +4,7 @@ class UserWithTimestamp
   
   attr_accessible :username, :email
   
-  attribute :username, key: true
+  key :username
   attribute :email
 
   timestamps
