@@ -28,12 +28,20 @@ module HyperMapper
       end
 
       if self.class.embedded?
+        parent.send(:save_inner) unless parent.persisted?
+
         embedded_collection_name = self.model_name.underscore.pluralize
         parent.send(embedded_collection_name) << self
+        
+        jsonObject = self.as_json(root: false)
+        jsonObject.delete self.class.key_name
+        json = jsonObject.to_json
+        
         update = {}
-        update[embedded_collection_name] = {}
-        update[embedded_collection_name][self.key_value.to_s] = self.to_json
-        persisted = HyperMapper::Config.client.map_add parent.class.space_name,
+        update[embedded_collection_name] = {}        
+        update[embedded_collection_name][self.key_value.to_s] = json
+        
+        self.persisted = HyperMapper::Config.client.map_add parent.class.space_name,
                                                        parent.key_value,
                                                        update
       else
@@ -48,7 +56,7 @@ module HyperMapper
     end
     
     def persisted=(v)
-      @persisted=v
+      @persisted = v
       clean_attributes! if @persisted
     end
 

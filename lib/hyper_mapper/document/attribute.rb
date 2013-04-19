@@ -147,7 +147,7 @@ module HyperMapper
     def attributes
       res = {}
       self.class.attributes.each do |k, v|
-        res[k] = attribute_values_map[k]
+        res[k] = attribute_values_map[k].name.to_s
       end
       res
     end
