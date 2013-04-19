@@ -94,3 +94,19 @@ def stub_auto_id_map_add(space, key, value, ret=true)
      end
   end.and_return(ret)
 end
+
+def verify_collection_interface(klass)
+  ['find',
+   'where',
+   'remove',
+   '<<',
+   'each',
+   'length',
+   'first',
+   'all',
+   'create',
+   'create!',
+   'build'].each do |method|
+    klass.should respond_to method
+  end
+end

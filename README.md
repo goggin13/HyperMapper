@@ -68,8 +68,6 @@ user.posts.create! title: 'My new post', content: 'more great content'
   * all
   * create
   * create!
-  * update_attributes!
-  * update_attributes  
   * build
     
 * relational
