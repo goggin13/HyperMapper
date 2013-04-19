@@ -22,4 +22,5 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'activemodel', '~> 3.2.11'
   gem.add_development_dependency 'rspec', '~> 2.12'
   gem.add_development_dependency 'pry', '~> 0.9.12'
+  gem.add_development_dependency 'simplecov'
 end

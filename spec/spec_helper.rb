@@ -1,6 +1,8 @@
 require 'rubygems'
 require 'bundler/setup'
+require 'simplecov'
 
+SimpleCov.start if ENV['COVERAGE']
 require 'hyper_mapper' 
 
 $LOAD_PATH.unshift(File.dirname(__FILE__))
