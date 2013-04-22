@@ -59,8 +59,8 @@ describe 'HyperMapper::Document::HasAndBelongsToMany' do
           
         before do
           stub_multi_get 'articles', [1, 2, 3], [
-            {title: 'Hello world', user_id: 1, id: 1},
-            {title: 'Goodbye world', user_id: 2, id: 2}
+            {title: 'Hello world', user_username: 1, id: 1},
+            {title: 'Goodbye world', user_username: 2, id: 2}
           ]
         end
         

@@ -17,7 +17,13 @@ module HyperMapper
       end
       
       def create!(params={})
-        create(params)
+        instance = create(params)
+        if instance.errors.any?
+          msg = instance.errors.full_messages[0]
+          raise Exceptions::ValidationException.new msg
+        end
+        
+        instance
       end 
 
       def create_space

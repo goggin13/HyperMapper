@@ -15,8 +15,8 @@ module HyperMapper
 
       def belongs_to(parent)
         define_method parent do
-          foreign_key = "#{parent}_id"
           parent_klass = parent.to_s.classify.constantize
+          foreign_key = "#{parent_klass.foreign_key}"
           predicate = {}
           predicate[parent_klass.key_name] = self.send(foreign_key)
           (parent_klass.where predicate)[0]

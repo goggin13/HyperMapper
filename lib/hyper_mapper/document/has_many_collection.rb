@@ -7,7 +7,7 @@ module HyperMapper
       def initialize(options={})
         @klass = options[:class]
         @parent = options[:parent]
-        @foreign_key = @parent.model_name.foreign_key
+        @foreign_key = @parent.class.foreign_key
       end
 
       def [](v)
@@ -16,9 +16,8 @@ module HyperMapper
     
       def find(id)
         predicate = {}
-        predicate[foreign_key] = @parent.key_value
         predicate[@klass.key_name.to_s] = id
-        (@klass.where predicate)[0]
+        where(predicate)[0]
       end
 
       def all
@@ -36,11 +35,13 @@ module HyperMapper
       end
 
       def create!(attrs)
-        create(attrs)
+        attrs[foreign_key] = @parent.key_value
+        @klass.create! attrs
       end
       
       def create(attrs)
-        build(attrs).save
+        attrs[foreign_key] = @parent.key_value
+        @klass.create attrs
       end      
 
       def build(attrs={})
@@ -53,10 +54,15 @@ module HyperMapper
         child.save
       end
       
-      def where
+      def where(predicate={})
+        predicate[foreign_key] = @parent.key_value
+        @klass.where predicate
       end
       
       def remove(item)
+        item.send("#{@foreign_key}=", nil)
+        item.save
+        item
       end
       
       def length

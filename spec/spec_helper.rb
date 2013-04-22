@@ -71,6 +71,12 @@ def stub_search(space, predicate, result)
          .and_return(result)
 end
 
+def stub_count(space, predicate, result)
+  @client.should_receive(:count)
+         .with(space, predicate)
+         .and_return(result)
+end
+
 def stub_map_remove(space, key, map, ret=true)
   @client.should_receive(:map_remove)
          .with(space, key, map)

@@ -57,6 +57,21 @@ user.posts.create! title: 'My new post', content: 'more great content'
 
 ## Document API
 
+* HyperDocument
+  * count
+  * where
+  * all
+  * find_all
+  * create
+  * create!
+  * instance
+    * save
+    * save!
+    * update_attributes!
+    * update_attributes
+    * destroy
+    * persisted?
+
 * HyperMapperCollection
   * find
   * where
@@ -69,7 +84,7 @@ user.posts.create! title: 'My new post', content: 'more great content'
   * create
   * create!
   * build
-    
+
 * relational
   * has_many
     * HasManyCollection
@@ -77,13 +92,6 @@ user.posts.create! title: 'My new post', content: 'more great content'
   * has_one (todo)
   * has_and_belongs_to_many
   	* HasAndBelongsToManyCollection
-  * count
-  * where
-  * all
-  * first
-  * find_all
-  * create
-  * create!
 
 * embedded
   * embedded_in
@@ -93,13 +101,6 @@ user.posts.create! title: 'My new post', content: 'more great content'
     * build_object
   * embeds_many
     * embedded_collection
-  * instance
-    * save
-    * save!
-    * update_attributes!
-    * update_attributes
-    * destroy
-    * persisted?
   	  
 * timestamps
 * callbacks

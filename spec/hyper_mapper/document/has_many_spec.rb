@@ -19,26 +19,26 @@ describe 'HyperMapper::Document::HasMany' do
       @user.should respond_to :articles
     end
     
-    it "should return a collection whos foreign key returns user_id" do
-      @user.articles.foreign_key.should == 'user_id'
+    it "should return a collection whos foreign key returns user_username" do
+      @user.articles.foreign_key.should == 'user_username'
     end
 
     it "should be able to be added to" do
       post = Article.new title: "test"
-      stub_auto_id_put 'articles', {user_id: @user.username, title: 'test'}
+      stub_auto_id_put 'articles', {user_username: @user.username, title: 'test'}
       @user.articles << post
     end
 
     it "should return the first item" do
       stub_search 'articles', 
-                  {'user_id' => 'goggin13'}, 
-                  [{title: 'Goodbye world', user_id: @user.username, id: 2}]      
+                  {'user_username' => 'goggin13'}, 
+                  [{title: 'Goodbye world', user_username: @user.username, id: 2}]      
       @user.articles.first.title.should == 'Goodbye world'
     end
 
     it "should offer a find method" do
       stub_search 'articles', 
-                  {'user_id' => 'goggin13', 'id' => 2}, 
+                  {'user_username' => 'goggin13', 'id' => 2}, 
                   [{title: 'Goodbye world', id: 2}]
       article = @user.articles.find(2)
       article.title.should == 'Goodbye world'
@@ -47,9 +47,9 @@ describe 'HyperMapper::Document::HasMany' do
     end
     
     it "should offer a create method" do
-      stub_auto_id_put 'articles', {title: 'test', user_id: @user.username}
+      stub_auto_id_put 'articles', {title: 'test', user_username: @user.username}
       article = @user.articles.create! title: "test"
-      article.user_id.should == @user.username
+      article.user_username.should == @user.username
       article.id.should_not be_nil
       article.id.length.should == 47
       article.title.should == 'test'
@@ -59,7 +59,7 @@ describe 'HyperMapper::Document::HasMany' do
   describe "belongs_to" do
     
     before do
-      @article = Article.new title: 'hello', id: 1, user_id: 'goggin13'
+      @article = Article.new title: 'hello', id: 1, user_username: 'goggin13'
     end
 
     it "should add a singular function name to the child object" do

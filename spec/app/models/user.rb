@@ -4,7 +4,7 @@ class User
   
   attr_accessible :username, :email, :posts
   
-  attribute :username, key: true
+  key :username
   attribute :email
   
   embeds_many :posts
