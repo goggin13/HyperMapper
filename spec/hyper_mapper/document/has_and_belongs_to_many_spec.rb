@@ -65,8 +65,9 @@ describe 'HyperMapper::Document::HasAndBelongsToMany' do
         end
         
         it "returns all the child objects" do
-          @tag.articles[0].title.should == 'Hello world'
-          @tag.articles[1].title.should == 'Goodbye world'
+          articles = @tag.articles.to_a
+          articles[0].title.should == 'Hello world'
+          articles[1].title.should == 'Goodbye world'
         end
 
         it "supports enumerable methods" do

@@ -89,12 +89,12 @@ def stub_map_add(space, key, map, ret=true)
          .and_return(ret)
 end
 
-def stub_auto_id_map_add(space, key, value, ret=true)
+def stub_auto_id_map_add(space, key, field, value, ret=true)
   @client.should_receive(:map_add) do |s, k, m|
      s.should == space
      k.should == key
      m.length.should == 1
-     m.each do |id, val|
+     m[field].each do |id, val|
        id.length.should == 47
        val.should == value
      end

@@ -4,13 +4,15 @@ describe 'HyperMapper::Document::Embed' do
   
   before do
     @client = stub_client
-    @attrs = {username: 'goggin13', 
+    @attrs = {username: 'goggin13',
               email: 'goggin13@example.com',
               posts: [
                        {title: 'Hello world', id: 1},
                        {title: 'Goodbye world', id: 2}
                      ]}
     @user = User.new @attrs
+    stub_any_put 'users', 'goggin13'
+    @user.save
   end
 
   describe "embeds_many" do
@@ -28,16 +30,17 @@ describe 'HyperMapper::Document::Embed' do
     end
 
     it "should return the relevant posts" do
-      @user.posts[0].should be_a Post
-      @user.posts[1].should be_a Post
-      @user.posts[0].title.should == 'Hello world'
-      @user.posts[1].title.should == 'Goodbye world'
-      @user.posts[0].id.should == 1
-      @user.posts[1].id.should == 2
+      posts = @user.posts.to_a
+      posts[0].should be_a Post
+      posts[1].should be_a Post
+      posts[0].title.should == 'Hello world'
+      posts[1].title.should == 'Goodbye world'
+      posts[0].id.should == 1
+      posts[1].id.should == 2
     end
     
     it "should not mark the returned posts from new as persisted" do
-      @user.posts[0].should_not be_persisted
+      @user.posts.first.should_not be_persisted
     end
     
     describe "from find" do
@@ -52,20 +55,14 @@ describe 'HyperMapper::Document::Embed' do
       end
 
       it "should mark the returned posts as persisted if retrieved via find" do
-        @user.posts[0].should be_persisted
+        @user.posts.first.should be_persisted
       end
 
       it "should set the id on the child objects" do
-         @user.posts[0].id.should == '1'
-         @user.posts[1].id.should == '2'
+        posts = @user.posts.to_a 
+        posts[0].id.should == '1'
+        posts[1].id.should == '2'
       end
-    end
-
-    it "should be able to be added to" do
-      post = Post.new id: 3, title: "test"
-      @user.posts << post
-      @user.posts.length.should == 3
-      @user.posts.find(3).user.username.should == @user.username
     end
 
     it "should return the first item" do
@@ -86,8 +83,6 @@ describe 'HyperMapper::Document::Embed' do
     end
     
     it "should create 2 posts for two subsequent create calls" do
-      stub_any_put 'users', 'goggin13'
-      @user.save
       stub_map_add 'users', 'goggin13', {
         'posts' => { "4" => "{\"title\":\"test4\"}" }
       }
@@ -102,7 +97,7 @@ describe 'HyperMapper::Document::Embed' do
   describe "embedded_in" do
     
     before do
-      @post = @user.posts[0]
+      @post = @user.posts.first
     end
 
     it "should be a method on the class" do
@@ -139,7 +134,7 @@ describe 'HyperMapper::Document::Embed' do
       user = User.new(username: 'goggin13')
       stub_any_put 'users', 'goggin13'
       user.save
-      stub_auto_id_map_add 'users', user.username, "{\"title\":\"test\"}"
+      stub_auto_id_map_add 'users', user.username, 'posts', "{\"title\":\"test\"}"
       post = user.posts.create! title: 'test22'
       post.should be_persisted
     end
@@ -154,15 +149,12 @@ describe 'HyperMapper::Document::Embed' do
     describe "destroy" do
 
       before do
-        stub_put 'users', @user.username, {
-          email: "goggin13@example.com", 
-          posts: {"2"=>"{\"title\":\"Goodbye world\"}"}
-        }
+        stub_map_remove "users", "goggin13", {"posts" => [1]}
       end
 
       it "should remove the post" do
         expect {
-          @user.posts[0].destroy
+          @user.posts.first.destroy
         }.to change(@user.posts, :length).by(-1)
       end
     end

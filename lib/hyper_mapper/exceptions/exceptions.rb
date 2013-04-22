@@ -7,5 +7,6 @@ module HyperMapper
     class MissingArgumentError < HyperMapperError; end
     class MassAssignmentException < HyperMapperError; end
     class ValidationException < HyperMapperError; end
+    class NotSupportedException < HyperMapperError; end
   end
 end

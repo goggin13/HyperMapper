@@ -24,8 +24,8 @@ describe HyperMapper::Document::HasManyCollection do
     end
     
     it "should return null if none exists" do
-      stub_get 'users', 'goggin13', nil
-      User.find('goggin13').should be_nil
+      stub_search 'articles', {'user_username' => 'goggin13', 'id' => 'not_found'}, []
+      @collection.find('not_found').should be_nil
     end
   end
   
@@ -65,13 +65,14 @@ describe HyperMapper::Document::HasManyCollection do
   describe "<<" do
     
     before do
-      stub_put 'articles', 'auto_id_1', {title: 'hello'}
-      @article = Article.create! id: 'auto_id_1', title: 'hello'      
+      @article = Article.new id: 'auto_id_1', title: 'hello'      
     end
     
     it "should add an item to the collection" do
-      stub_put 'articles', 'auto_id_1', {user_username: 'goggin13'}
+      stub_put 'articles', 'auto_id_1', {title: 'hello', user_username: 'goggin13'}
       @collection << @article
+      @article.user_username.should == 'goggin13'
+      @article.should be_persisted
     end
   end
   

@@ -33,16 +33,8 @@ module HyperMapper
         @join_class.create! params
       end
 
-      def [](v)
-        collection[v]
-      end
-
       def each
         collection.each { |c| yield(c) }
-      end
-
-      def first
-        self[0]
       end
   
       def create(params={})

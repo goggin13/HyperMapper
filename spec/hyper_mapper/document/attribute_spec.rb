@@ -74,7 +74,9 @@ describe 'HyperMapper::Document::Attribute' do
     end
 
     it "should should validate presence of the key" do
-      AttributeTestClass.new(field_name: 'test').should_not be_valid
+      instance = AttributeTestClass.new(field_name: 'test')
+      instance.key_name = nil
+      instance.should_not be_valid
     end
 
     it "should raise an error if it is modified" do

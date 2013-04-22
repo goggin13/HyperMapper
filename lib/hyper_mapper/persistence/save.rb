@@ -3,7 +3,15 @@ require 'active_support/inflector'
 module HyperMapper
   module Persistence
     attr_accessor :persisted
-
+    
+    def save!
+      save
+      if errors.any?
+        msg = errors.full_messages[0]
+        raise Exceptions::ValidationException.new msg
+      end
+    end
+    
     def save
       success = true
       run_callbacks :save do
@@ -27,23 +35,24 @@ module HyperMapper
         raise Exceptions::IllegalKeyModification.new("Key #{self.class.key_name} cannot be modified")
       end
 
-      if self.class.embedded?
-        parent.send(:save_inner) unless parent.persisted?
-
-        embedded_collection_name = self.model_name.underscore.pluralize
-        parent.send(embedded_collection_name) << self
+      if self.class.embedded? && !parent.persisted?
+        self.persisted = parent.send(:save_inner)
+        
+      elsif self.class.embedded?
+        
+        embedded_collection_name = self.class.embedded_collection_name
         
         jsonObject = self.as_json(root: false)
         jsonObject.delete self.class.key_name
         json = jsonObject.to_json
         
         update = {}
-        update[embedded_collection_name] = {}        
+        update[embedded_collection_name] = {}
         update[embedded_collection_name][self.key_value.to_s] = json
         
-        self.persisted = HyperMapper::Config.client.map_add parent.class.space_name,
-                                                       parent.key_value,
-                                                       update
+        self.persisted = Config.client.map_add parent.class.space_name,
+                                               parent.key_value,
+                                               update
       else
         persist
       end

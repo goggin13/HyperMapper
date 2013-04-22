@@ -3,6 +3,8 @@ require 'json'
 module HyperMapper
   module Document
     class EmbeddedCollection
+      include Enumerable
+      
       def initialize(options={})
         @klass = options[:class]
         @parent = options[:parent]
@@ -21,7 +23,8 @@ module HyperMapper
       def initialize_from_array(arr)
         arr.each do |attrs|
           child = @klass.load_from_attrs attrs
-          self.<< child
+          @elements[child.key_value] = child
+          child.parent = @parent
           child.persisted = false
         end
       end
@@ -29,38 +32,39 @@ module HyperMapper
       def initialize_from_json_map(map)
         map.each do |k, attrs|
           child = add_from_json k, attrs
-          child.persisted = true 
+          child.persisted = true
         end
-      end
-
-      def [](v)
-        @elements.to_a[v][1]
       end
 
       def find(id)
         @elements[id]
       end
 
-      def remove(id)
-        @elements.delete(id) if @elements.has_key?(id)
-        @parent.save
+      def remove(item)
+        @elements.delete(item.id) if @elements.has_key?(item.id)
+        delete = {}
+        delete[@klass.embedded_collection_name] = [item.id]
+        Config.client.map_remove @parent.class.space_name,
+                                 @parent.key_value,
+                                 delete
+        item
       end
       
       def <<(item)
+        
         @elements[item.key_value] = item
         item.parent = @parent
+        item.save unless item.persisted?
+        
+        item
       end
 
       def length
         @elements.length
       end
 
-      def first
-        self[0]
-      end
-
-      def each(&block)
-        (@elements || {}).each { |k,v| block.call(v) }
+      def each
+        (@elements || {}).each { |k,v| yield(v) }
       end
 
       def to_json
@@ -79,6 +83,7 @@ module HyperMapper
       def add_from_json(k, json)
         child = from_json! json
         child.send("#{@klass.key_name}=", k)
+        child.persisted = true
         self.<< child
         child
       end
@@ -92,23 +97,31 @@ module HyperMapper
       end
       
       def create(attrs)
-        create!(attrs)
+        child = @klass.new(attrs)
+        child.parent = @parent
+        child.save
+        self.<< child if child.valid?
+        child
       end
 
       def create!(attrs)
         child = @klass.new(attrs)
+        child.parent = @parent
+        child.save!
         self.<< child
-        child.save
         child
       end
 
       def build(attrs={})
         child = @klass.new(attrs)
-        self.<< child
+        @elements[child.key_value] = child
+        child.parent = @parent
         child
       end
       
-      def where
+      def where(params={})
+        msg = "where queries are not supported on embedded collections"
+        raise Exceptions::NotSupportedException.new msg
       end
     end
   end
