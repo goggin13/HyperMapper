@@ -155,13 +155,6 @@ module HyperMapper
         v.dirty = false
       end
     end
-
-    def attribute_values_map_raw
-      attribute_values_map.inject({}) do |acc, (key, field)|
-        acc[key] = (field ? field.value : nil)
-        acc
-      end
-    end
     
     def attributes_for_save
       attrs = attribute_values_map.inject({}) do |acc, (key, field)|
@@ -182,10 +175,6 @@ module HyperMapper
       attrs.delete self.class.key_name
 
       attrs
-    end
-
-    def read_attribute_for_validation(key)
-      attribute_values_map_raw[key]
     end
 
     def set_attribute_value(name, val)

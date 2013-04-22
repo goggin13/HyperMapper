@@ -32,9 +32,6 @@ module HyperMapper
         alias_method :parent, parent
         alias_method 'parent=', "#{parent}="
 
-        define_method 'parent_name' do
-          parent
-        end
       end
 
       def embedded?
