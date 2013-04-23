@@ -33,9 +33,10 @@ client.map_add 'users_two', 'test', {'comments' => {'1' => 'hello2'}}
 puts client.get 'users_two', 'test'
 
 # THIS FAILS
-client.map_add 'users_two', 'test', {'comments' => {'1' => 'hello3', '2' => 'goodbye3'}}
-puts client.get 'users_two', 'test'
+#client.map_add 'users_two', 'test', {'comments' => {'1' => 'hello3', '2' => 'goodbye3'}}
+#puts client.get 'users_two', 'test'
 
 # This syntax doesn't seem to work
 # client.map_remove 'users_two', 'test', {'comments' => ['1']}
+#client.map_remove 'users_two', 'test', {'comments' => {'1' => "not used"}}
 # puts client.get 'users_two', 'test'

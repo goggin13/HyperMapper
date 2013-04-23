@@ -5,7 +5,9 @@ class Post
 
   attr_accessor :tag_string
   
-  key :id, autogenerate: true
+  attr_accessible :title, :content, :user_id
+
+  autogenerate_id
   attribute :title
   attribute :content
   attribute :user_id

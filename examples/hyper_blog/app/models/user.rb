@@ -4,6 +4,7 @@ class User
   include HyperMapper::Document
   
   attr_accessor :password
+  attr_accessible :username, :bio, :password
 
   autogenerate_id
   attribute :username

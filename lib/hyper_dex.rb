@@ -49,15 +49,20 @@ module HyperDex
       @client.map_remove space, key, map_key
     end
     
-    def map_add(space, key, map_key, map_value)
-      @client.map_add space, key, map_key, map_value
+    def map_add(space, key, map_value)
+      @client.map_add space, key, map_value
     end
 
-    def multi_get(space, keys) 
-      keys.map do |key| 
-        @client.async_get space, key
-      end.map do |deferredObject| 
-        deferredObject.wait()
+    def multi_get(space, keys, id_name='id') 
+      puts "multi get"
+      keys.map do |key|
+        puts "#{space} --> #{key}" 
+        [(@client.async_get space, key), key]
+      end.map do |arr|
+        deferredObject = arr[0]
+        r = deferredObject.wait()
+        r[id_name] = arr[1]
+        r
       end
     end
     
@@ -87,7 +92,11 @@ module HyperDex
     def map_atomic_xor(space, key, value) end
     def map_string_prepend(space, key, value) end
     def map_string_append(space, key, value) end
-    def async_get(space, key) end
+    
+    def async_get(space, key) 
+      @client.async_get space, key
+    end
+
     def async_put(space, key, value) end
     def async_cond_put(space, key, condition, value) end
     def async_delete(space, key) end
