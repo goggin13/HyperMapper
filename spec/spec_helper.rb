@@ -89,6 +89,12 @@ def stub_map_add(space, key, map, ret=true)
          .and_return(ret)
 end
 
+def stub_delete(space, key, ret=true)
+  @client.should_receive(:delete)
+         .with(space, key)
+         .and_return(ret)
+end
+
 def stub_auto_id_map_add(space, key, field, value, ret=true)
   @client.should_receive(:map_add) do |s, k, m|
      s.should == space

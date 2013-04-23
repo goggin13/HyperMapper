@@ -38,13 +38,15 @@ module HyperMapper
       end
   
       def create(params={})
-        item = @klass.create! params
-        self.<< item
-        item  
+        item = @klass.create params
+        self.<< item if item.valid?
+        item
       end
       
       def create!(params={})
-        create(params)
+        item = @klass.create! params
+        self.<< item
+        item
       end
 
       def build(params={})
@@ -58,16 +60,24 @@ module HyperMapper
         @klass.find(id)
       end
       
-      def where
+      def where(params={})
+        params[@klass.key_name] = child_ids
+        @klass.where params
       end
       
       def remove(item)
+        params = {}
+        params[@parent_class.foreign_key] = @parent.key_value
+        params[item.class.foreign_key] = item.key_value
+        @join_class.where(params).map(&:destroy)
       end
           
       def length
+        child_ids.length
       end
       
       def all
+        where({})
       end
     end
   end
