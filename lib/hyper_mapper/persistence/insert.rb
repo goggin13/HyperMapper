@@ -26,21 +26,38 @@ module HyperMapper
         instance
       end 
 
-      # def create_space
-      #   cmd = '/home/goggin/projects/install/bin/hyperdex '
-      #   cmd += 'add-space '
-      #   cmd += "space #{space_name} "
-      #   cmd += "key #{keyname} "
-      #   cmd += "attributes "
-      #   cmd += "subspace "
-      #   cmd += "tolerate 2 failures"
-      #   system(cmd)
-      # end
-      # 
-      # def destroy_space
-      #   cmd = '/home/goggin/projects/install/bin/hyperdex '
-      #   cmd += "rm-space #{space_name}"
-      # end
+      def create_space(t=2)
+        attr_names = attribute_meta_data.map do |k, meta|
+          if meta[:key]
+            nil
+          elsif meta[:type].nil? || meta[:type] == :string
+            k
+          else
+            meta[:type] = :int if meta[:type] == :datetime
+            "#{meta[:type]} #{k}"
+          end
+        end
+        subspaces = attributes.map { |k,v| k }
+        embedded_classes.each do |children|
+          attr_names << "map(string, string) #{children}"
+          subspaces << children
+        end
+
+        cmd = <<-BASH
+#{Config.path} add-space <<EOF
+space #{space_name} 
+key #{key_name}
+attributes #{attr_names.reject(&:nil?).join ', '}
+subspace #{subspaces.join ', '}
+tolerate #{t} failures
+EOF
+BASH
+        cmd
+      end
+
+      def destroy_space
+        cmd = "#{Config.path} rm-space #{space_name}"
+      end
     end
   end
 end

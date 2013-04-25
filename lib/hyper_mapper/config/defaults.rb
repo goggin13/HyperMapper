@@ -21,5 +21,9 @@ module HyperMapper
     def load_defaults
       load_from_file default_config_path
     end
+
+    def path
+      config['path'] || 'hyperdex'
+    end
   end
 end

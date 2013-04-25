@@ -54,9 +54,7 @@ module HyperDex
     end
 
     def multi_get(space, keys, id_name='id') 
-      puts "multi get"
       keys.map do |key|
-        puts "#{space} --> #{key}" 
         [(@client.async_get space, key), key]
       end.map do |arr|
         deferredObject = arr[0]

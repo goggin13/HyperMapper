@@ -1,7 +1,7 @@
 
 module HyperMapper
   module Config
-    
+   
     def client=(c)
       @client = c
     end

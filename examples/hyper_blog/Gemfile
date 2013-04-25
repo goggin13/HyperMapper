@@ -10,6 +10,10 @@ gem 'sqlite3'
 gem 'HyperMapper', path: '/home/goggin/projects/rails/hyper_mapper'
 gem 'faker'
 
+group :test, :development do
+  gem "rspec-rails", "~> 2.0"
+end
+
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do

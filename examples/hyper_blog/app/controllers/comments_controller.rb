@@ -2,7 +2,7 @@ class CommentsController < ApplicationController
   def create
   	@post = Post.find(params[:post_id])
   	@comment = @post.comments.create text: params[:comment][:text],
-  									 user_id: current_user.id
+  									                 user_id: current_user.id
   	respond_to do |format|
   		format.js
   	end

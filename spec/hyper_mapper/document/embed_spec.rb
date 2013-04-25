@@ -149,7 +149,7 @@ describe 'HyperMapper::Document::Embed' do
     describe "destroy" do
 
       before do
-        stub_map_remove "users", "goggin13", {"posts" => [1]}
+        stub_map_remove "users", "goggin13", {"posts" => {1 => 'dummy'}}
       end
 
       it "should remove the post" do

@@ -1,7 +1,11 @@
 <div class="post">
+  
   <h2 class="title">
-    <a href="#"><%= @post.title %></a>
+    <%= @post.title %>
   </h2>
+
+  <div class="clear"></div>
+
   <p class="meta">
     <span class="author">
       <%= link_to @user.username, @user %>

@@ -34,7 +34,7 @@ module HyperMapper
       end
 
       def each
-        collection.each { |c| yield(c) }
+        child_collection.each { |c| yield(c) }
       end
   
       def create(params={})

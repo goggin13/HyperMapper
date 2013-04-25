@@ -45,7 +45,7 @@ describe HyperMapper::Document::EmbeddedCollection do
   describe "remove" do
     
     it "should remove the item from the collection and return it" do
-      stub_map_remove 'users', 'goggin13', {'posts' => ['1']}
+      stub_map_remove 'users', 'goggin13', {'posts' => {'1' => 'dummy'}}
       post = @collection.first
       item = @collection.remove post
       item.id.should == post.id

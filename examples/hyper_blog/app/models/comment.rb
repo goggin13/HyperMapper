@@ -1,3 +1,5 @@
+require 'hyper_mapper'
+
 class Comment
 	include HyperMapper::Document
 	

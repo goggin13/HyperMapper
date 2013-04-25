@@ -43,7 +43,8 @@ module HyperMapper
       def remove(item)
         @elements.delete(item.id) if @elements.has_key?(item.id)
         delete = {}
-        delete[@klass.embedded_collection_name] = [item.id]
+        delete[@klass.embedded_collection_name] = {}
+        delete[@klass.embedded_collection_name][item.id] = "dummy"
         Config.client.map_remove @parent.class.space_name,
                                  @parent.key_value,
                                  delete

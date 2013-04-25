@@ -12,6 +12,8 @@ require 'active_model'
 
 module HyperMapper
   module Document
+    attr_accessor :includers
+
     def self.included(mod)
       mod.send(:extend, ClassMethods)
       mod.send(:extend, HyperMapper::Finders)

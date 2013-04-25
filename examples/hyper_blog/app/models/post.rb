@@ -5,7 +5,7 @@ class Post
 
   attr_accessor :tag_string
   
-  attr_accessible :title, :content, :user_id
+  attr_accessible :title, :content, :user_id, :tag_string
 
   autogenerate_id
   attribute :title
@@ -38,6 +38,6 @@ class Post
       tag = Tag.create! name: tag_name unless tag
       add_tag tag 
     end
-    tags.each { |t| (tags.delete t) unless (new_tag_names.include? t.name) }
+    tags.each { |t| (tags.remove t) unless (new_tag_names.include? t.name) }
   end
 end

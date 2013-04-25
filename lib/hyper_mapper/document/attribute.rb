@@ -33,14 +33,18 @@ module HyperMapper
         end
       end
       
+      def attribute_meta_data
+        @attributes_meta_data ||= {}
+      end
+
       def attributes
         @attributes ||= {}
       end
       
       def create_attribute(name, params)
         unless params[:embedded] || params[:embedded_in]
-          @attributes ||= {}
-          @attributes[name] = name
+          attribute_meta_data[name] = params
+          attributes[name] = name
         end
       end
       
