@@ -1,22 +1,20 @@
 <p>
-  <b>Username:</b>
-  <%= @user.username %>
+  <%= image_tag @user.avatar %>
+  <br/>
+  <b><%= @user.username %></b>
 </p>
 
 <p>
-	<b>Created at:</b>
-	<%= @user.created_at.strftime("%-m-%-d %k:%M:%S") %>
+	Member since <%= @user.created_at.strftime("%-m-%-d %k:%M:%S") %>
+	<br/>
+	Last update at <%= @user.updated_at.strftime("%-m-%-d %k:%M:%S") %>
 </p>
 
 <p>
-	<b>Modified at:</b>
-	<%= @user.updated_at.strftime("%-m-%-d %k:%M:%S") %>
-</p>
-
-<p>
-  <b>Bio:</b>
   <%= @user.bio %>
 </p>
+
+<h3>Posts</h3>
 
 <ul>
 	<% @user.posts.each do |post| %>

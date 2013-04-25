@@ -40,4 +40,7 @@ class User
     user
   end
     
+  def avatar(size=150)
+    "http://robohash.org/#{username}.png?size=#{size}x#{size}"
+  end
 end

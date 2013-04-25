@@ -7,6 +7,13 @@ namespace :db do
     Time.at((t2.to_f - t1.to_f) * rand + t1.to_f)
   end
   
+  task create_spaces: :environment do
+    [User, Tag, Post, PostTag].each do |klass|
+      system klass.destroy_space
+      system klass.create_space
+    end
+  end
+
   task populate: :environment do
     # User.destroy_all
     # Tag.destroy_all

@@ -91,7 +91,9 @@ class PostsController < ApplicationController
   end
   
   def search
-    @posts = Post.where(["content like ?", "%#{params[:query]}%"])
+    @query = params[:query]
+    @title = "Results for '#{@query}'"
+    @posts = Post.where(title: @query)
 
     respond_to do |format|
       format.html { render "index.html.erb" }

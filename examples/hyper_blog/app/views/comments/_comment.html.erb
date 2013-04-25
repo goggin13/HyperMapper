@@ -1,5 +1,6 @@
 <% user = comment.user %>
 <li id="comment_<%= comment.id %>">
+	<%= image_tag user.avatar(50) %>
 	<%= link_to user.username, user %><br/>
 	<%= comment.text %><br/>
 	<%= comment.created_at.strftime("%-m-%-d %k:%M:%S") %>
