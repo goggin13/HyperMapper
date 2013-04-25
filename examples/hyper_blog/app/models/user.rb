@@ -14,7 +14,8 @@ class User
   attribute :session_id
   timestamps
 
-  validates :username, presence: true
+  validates :username, presence: true,
+                       format: /[a-zA-Z\s]+/
   validates :password, presence: true, if: "hashed_password.blank?"
   
   has_many :posts

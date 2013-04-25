@@ -4,6 +4,8 @@
 
 HyperMapper is an Ruby Object Document Mapper for [HyperDex](http://hyperdex.org/), a new NoSQL store from Cornell University.  It has been tested in Ruby 1.9.3, and plays nicely with Rails 3.2.x.
 
+HyperMapper, like HyperDex itself is a work in progress and is not well vetted in production.  Please, I welcome any feedback, pull-requests, issues, etc.., either here on Github, or find me at [goggin13@gmail.com](mailto:goggin13@gmail.com).
+
 ## Examples
 ```
 class User
@@ -15,7 +17,6 @@ class User
   attribute :username
   timestamps
 
-  
   has_many :posts
 end
 
@@ -31,7 +32,7 @@ class Post
   timestamps
 
   belongs_to :user
-
+  has_and_belongs_to_many :tags, through: :post_tags
   embeds_many :comments  
 end
 
@@ -46,6 +47,28 @@ class Comment
 	
 	belongs_to :user
 	embedded_in :post
+end
+
+class Tag
+  include HyperMapper::Document
+
+  attr_accessible :name
+
+  autogenerate_id
+  attribute :name
+  
+  has_and_belongs_to_many :posts, through: :post_tags
+end
+
+class PostTag
+  include HyperMapper::Document
+
+  attr_accessible :tag_id, :post_id
+
+  autogenerate_id
+  attribute :tag_id
+  attribute :post_id
+
 end
 
 user = User.create! username: 'goggin13', 
@@ -64,6 +87,8 @@ user.posts.create! title: 'My new post', content: 'more great content'
   * find_all
   * create
   * create!
+  * attribute
+  * timestamps
   * instance
     * save
     * save!
@@ -102,7 +127,6 @@ user.posts.create! title: 'My new post', content: 'more great content'
   * embeds_many
     * embedded_collection
   	  
-* timestamps
 * callbacks
   * *_create
   * *_save

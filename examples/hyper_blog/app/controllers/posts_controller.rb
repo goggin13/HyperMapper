@@ -1,5 +1,8 @@
 class PostsController < ApplicationController
   
+  before_filter :redirect_unless_signed_in, 
+                only: [:edit, :update, :new, :create, :destroy]
+  
   # GET /posts
   # GET /posts.json
   def index

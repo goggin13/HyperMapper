@@ -2,7 +2,7 @@ module SessionHelper
   
   def sign_in(user)
     user.session_id = SecureRandom.hex(16)
-    user.save 
+    user.save
     cookies[:session_id] = user.session_id
     self.current_user = user
   end
@@ -30,4 +30,11 @@ module SessionHelper
   def redirect_home_if_signed_in
     redirect_to root_path if signed_in?
   end 
+  
+  def redirect_unless_signed_in
+    unless signed_in?
+      flash[:notice] = "You must be logged in to access #{request.fullpath}"
+      redirect_to root_path
+    end
+  end
 end

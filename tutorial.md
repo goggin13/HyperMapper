@@ -8,7 +8,12 @@ You can see the finished application in the [example source code](https://github
 
 We'll start presuming you have Ruby >= 1.9.3, Rails 3.2.x and HyperDex 1.0. 
 
-If don't feel like meddling with set up tasks, you may wish to do the tutorial on an EC2 instance.  We have provided an AMI with all of the requisite software (TODO INSERT AMI ID).
+Additionally, I presume that you have built Rails applications before.  If you're familiar with
+[HyperDex](http://hyperdex.org/) that doesn't hurt, but you should be just fine getting through 
+this tutorial without any previous HyperDex experience.
+
+If don't feel like meddling with set up tasks, you may wish to do the tutorial on an EC2 instance.  We have 
+provided an AMI with all of the requisite software (TODO INSERT AMI ID).
 
 ## Creating the Application
 
@@ -33,20 +38,11 @@ bundle install
 
 ## Users
 
-Generating migrations is not yet supported, so we'll have to create the User space ourselves.  This HyperDex command will do the trick:
+Generating migrations is not yet supported, so we'll have to create the User space ourselves.  HyperMapper will give us a hand formatting the command however.  `User.create_space` returns a string that we can pass to the Ruby `system` call to create our new space:
 
 ```
-~/# hyperdex add-space <<EOF
-space users 
-key id 
-attributes 
-  username,
-  bio, 
-  int created_at,
-  int updated_at
-subspace username, bio, created_at, updated_at
-tolerate 2 failures
-EOF
+~/# rails c
+1.9.3p392 :001 > system(User.create_space)
 ```
 
 Now we can start with the standard Rails generate command.
@@ -63,45 +59,219 @@ class User
   
   attr_accessor :password
   
+  # Determines, as in Rails, which attributes can be modified via mass assignment
+  attr_accessible :username, :bio, :password
+  
   # HyperMapper will generate a unique ID the first time this 
   # User is saved
   autogenerate_id
   
   # Create two attributes, :username, and :bio
   attribute :username
-  attribute :bio  
+  attribute :bio
+  
+  # Things we'll need for authentication
+  attribute :salt
+  attribute :hashed_password
+  attribute :session_id  
   
   # Maintain :created_at and :updated_at timestamps
   timestamps
+    
 end
 ```
 
 That's all it takes to start! If you fire up your Rails server you should be able to CRUD in HyperDex all the users you desire.  We aimed to support as much querying and creation functionality that you will be familiar with from using ActiveRecord in Rails.  You can call ```User.create!```, or ```User.new(username: "Matt", bio: "Hello world")```, or ```User.find('some_user_id')```.  Check out [the docs](TODO INSERT LINK) for the rest of the Document API. But for now, you don't need to touch anything, as all the code from the scaffold generator will work as is.
 
 
+#### Validations
+Since HyperMapper includes many of the ActiveModel modules, we have access to validators and callback hooks.
+
+Let's add some simple validators, just like we would in our ActiveRecord model.
+
+
+```
+class User
+  include HyperMapper::Document
+  
+  …
+  
+  validates :username, presence: true,
+                       format: /[a-zA-Z\s]+/
+  validates :password, presence: true, if: "hashed_password.blank?"
+end
+```
+
+#### Callbacks
+Let's set up our authentication with a few functions and the `before_save` callback.  Our goal is to take the `:password` field defined with the `attr_accessor` encrypt the password (with a generated salt) and then save both the encrypted password and salt.  The final methods will allow us to authenticate users from our controller.
+
+
+```
+class User
+  include HyperMapper::Document
+  
+  …
+  
+  before_save :encrypt_password, if: "!password.nil?"
+  
+  def encrypt_password
+    self.salt ||= Digest::SHA256.hexdigest("#{Time.now.to_s}-#{username}")
+    self.hashed_password = encrypt(password)
+  end
+
+  def encrypt(raw_password)
+    Digest::SHA256.hexdigest("-#{salt}-#{raw_password}")
+  end
+  
+  def has_password?(raw_password)
+    hashed_password == encrypt(raw_password)
+  end
+
+  def self.authenticate(username, plain_text_password)
+    user = User.where(username: username)[0]
+    return nil unless user && user.has_password?(plain_text_password)
+    user
+  end
+end
+```
+
+## Authentication
+We'll use these functions, in `app/helpers/session_helper.rb` to help us log users in and out.
+
+#### Helpers
+```
+module SessionHelper
+  
+  # Create a new session id for the given user and save it both on the user object,
+  # and in a cookie
+  def sign_in(user)
+    user.session_id = SecureRandom.hex(16)
+    user.save
+    cookies[:session_id] = user.session_id
+    self.current_user = user
+  end
+
+  # delete the stored session cookie for this user
+  def sign_out_user(user)
+    user.session_id = nil
+    user.save
+    cookies.delete :session_id
+  end
+  
+  def current_user=(user)
+    @current_user = user
+  end
+  
+  # if their is a session_id cookie, then attempt to retrieve that user from
+  # HyperDex and return them.
+  def current_user
+    if cookies[:session_id]
+      @current_user ||= User.where(session_id: cookies[:session_id])[0]
+    else
+      nil
+    end
+  end
+
+  # return true if there is a currently authenticated user
+  def signed_in?
+    !current_user.nil?
+  end
+  
+  # redirect to the home page with a flash notice
+  # unless there is an authenticated user
+  def redirect_unless_signed_in
+    unless signed_in?
+      flash[:notice] = "You must be logged in to access #{request.fullpath}"
+      redirect_to root_path
+    end
+  end  
+end
+```
+
+#### Controller
+
+Here's what we'll need for the session_controller
+
+
+```
+class SessionsController < ApplicationController
+  
+  def new
+  end
+
+  def create
+  	user = User.authenticate(params[:session][:username], 
+                             params[:session][:password])
+  	if user
+  	  sign_in(user)
+  	  flash[:notice] = "Welcome, #{user.username}!"
+  	  redirect_to user
+  	else
+  	  flash[:error] = "Invalid email/password combination"
+  	  redirect_to new_session_path
+  	end
+  end
+
+  def destroy
+    flash[:notice] = "Logged out #{current_user.username}"
+	  sign_out_user
+	  redirect_to root_path
+  end
+
+end
+```
+
+
+#### Form
+
+And the login form
+
+
+```
+  <h1>Login</h1>
+
+  <%= form_for(:session, url: sessions_path) do |f| %>
+
+  <div class="field">
+    <%= f.label :username %><br />
+    <%= f.text_field :username %>
+  </div>
+  
+  <div class="field">
+    <%= f.label :password %><br />
+    <%= f.password_field :password %>
+  </div>
+  
+  <div class="actions">
+    <%= f.submit "Login" %>
+  </div>
+
+  <% end %>
+```
+
+#### Routes
+
+Finally, after adding the session resource to our routes file we will be able to login at `/sessions/new`.
+
+
+```
+HyperBlog::Application.routes.draw do
+	…
+	resources :sessions, only: [:new, :create, :destroy]
+	… 
+end
+```
+
 ## Posts
 
-We'll choose to implement our Post class as a separate entity.  A User will likely have many different posts,  which together could consitutute a reasonable amount of data that we don't want to load every time we want a User.
+We'll choose to implement our Post class as a separate entity.  A User will likely have many different posts,  which together could consitutute a reasonable amount of data that we don't want to load every time we want to load a User.
 
-As we did with our User model, we'll need to create the new space ourselves.
+As we did with our User model, we'll create the new space ourselves via `rails c`.
 
 ```
-hyperdex add-space <<EOF
-space posts 
-key id 
-attributes 
-  title,
-  content,
-  user_id,
-  int created_at,
-  int updated_at,
-  map(string, string) comments
-subspace title, content
-tolerate 2 failures
-EOF
+~/# rails c
+1.9.3p392 :001 > system(Post.create_space)
 ```
-
-Note that we need a ```(string, string)``` map for any ```embeds_many``` relationships we will want to support (Comments are up next).
 
 And the Rails scaffold generator will be a good place to start again:
 
@@ -115,7 +285,7 @@ And, again, we modify the generated Post model to include HyperMapper::Document.
 class Post
   include HyperMapper::Document
 
-  attr_accessor :tag_string
+  attr_accessible :title, :content, :user_id
   
   autogenerate_id
   attribute :title
@@ -129,6 +299,10 @@ class Post
   validates :content, presence: true
 
   belongs_to :user
+  
+  # we won't use this yet, but we want to generate this field
+  # when we create the new space, so we'll add it now
+  embeds_many :comments
 end
 ```
 
@@ -137,15 +311,49 @@ In addition, we can add the corresponding relationship to our User model.
 ```
 class User
   include HyperMapper::Document
-  
-  # previous code
-  # ...
-  
+  …
   has_many :posts
+  … 
 end
 ```
 
-Your CRUD operations will work now on Posts; though currently you have to manually enter the id of the User the post belongs to, as we have no concept of authentication or a current user yet.
+Let's also head over the the `PostController` and ensure that Users who are creating and editing posts are authenticated, as well as assigning those posts to the current_user.
+
+```
+class PostsController < ApplicationController
+  
+  before_filter :redirect_unless_signed_in, 
+                only: [:edit, :update, :new, :create, :destroy]
+  …
+  # GET /posts/1/edit
+  def edit
+    @post = current_user.posts.find(params[:id])
+  end
+
+  # POST /posts
+  # POST /posts.json
+  def create
+    @post = current_user.posts.build(params[:post])
+	…
+  end
+  
+  # PUT /posts/1.json
+  def update
+    @post = current_user.posts.find(params[:id])
+	… 
+  end
+  
+  def destroy
+    @post = current_user.posts.find(params[:id])
+    @post.destroy
+    …
+  end
+  
+  …
+end  
+```
+
+There we go! Now we have ensured users are only editing, updating, destroying their own posts.  We should also remove the `:user_id` field from `app/views/posts/_form.html.erb` since we aren't using it.
 
 ## Comments
 
@@ -173,8 +381,7 @@ end
 We'll create a form for creating comments at `app/views/comments/_form.html.erb`:
 
 ```
-<%= form_for(:comment, url: post_comments_path(@post), remote: true) do |f| %>
-    <%= f.user_id :text %><br/>
+<%= form_for(:comment, url: post_comments_path(@post)) do |f| %>
     <%= f.text_field :text, autocomplete: :off %><br/>
     <%= f.hidden_field :post_id, value: @post.id %>
     <%= f.submit "Comment" %>
@@ -182,11 +389,143 @@ We'll create a form for creating comments at `app/views/comments/_form.html.erb`
 <% end %>
 ```
 
-Again, we are for now stuck entering the :user_id by hand until we have an authentication system in place.
+We'll create a `CommentController` with the following code
+
+```
+class CommentsController < ApplicationController
+  
+  before_filter :redirect_unless_signed_in
+  
+  def create
+  	@post = Post.find(params[:post_id])
+  	@comment = @post.comments.build text: params[:comment][:text],
+                                    user_id: current_user.id
+    respond_to do |format|
+      if @comment.save
+        format.html { redirect_to @post }
+        format.json { render json: @comment }
+      else
+        format.html { render action: "new" }
+        format.json { render json: @comment.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def destroy
+  	@post = Post.find(params[:post_id])
+  	@comment = @post.comments.find(params[:id])
+  	@comment.destroy if @comment
+  	
+    respond_to do |format|
+      format.html { redirect_to @post }
+      format.json { head :no_content }
+    end
+  end
+end
+```
+
+Now once we add the form to the post page at `app/views/posts/show.html.erb` we will be able to create comments from the post page. 
+
+```
+<% if signed_in? %>
+
+  <% if current_user.id == @post.user_id %>
+    <%= link_to 'Edit', edit_post_path(@post) %>
+  <% end %>
+
+  <%= form_for(:comment, url: post_comments_path(@post), remote: true) do |f| %>
+    <%= f.text_field :text, autocomplete: :off %><br/>
+    <%= f.hidden_field :post_id, value: @post.id %>
+    <%= f.submit "Comment" %>
+  <% end %>
+  
+<% end %>
+```
 
 ## Tags
 
-## Searching
+Since a tag may have many posts, and a post may have many tags, we will need 
+two spaces to store the data for this relationship.  Both a `tags` space and a 
+`post_tags` space (think of it as a join table).
 
-## Authentication
+We'll create the following 2 models:
 
+```
+class Tag
+  include HyperMapper::Document
+
+  attr_accessible :name
+
+  autogenerate_id
+  attribute :name
+  
+  has_and_belongs_to_many :posts, through: :post_tags
+end
+```
+
+```
+class PostTag
+  include HyperMapper::Document
+
+  attr_accessible :tag_id, :post_id
+
+  autogenerate_id
+  attribute :tag_id
+  attribute :post_id
+
+end
+```
+
+And we can add the `has_and_belongs_to_many` relationship to the Post class as well
+
+```
+has_and_belongs_to_many :tags, through: :post_tags
+```
+
+As before, we will create the spaces with `rails c`
+
+```
+~/# rails c
+1.9.3p392 :001 > system(Tag.create_space)
+1.9.3p392 :002 > system(PostTag.create_space)
+```
+
+In order to facilitate creating tags, we'll add a text field to the post form, which accepts a comma a comma delimted list of tags.
+
+```
+  <div class="field">
+    <%= f.label :tag_string, "Comma delimited tags" %><br />
+    <%= f.text_field :tag_string, value: @post.tags.collect(&:name).join(', ') %>
+  </div> 
+```
+
+And whenever we save a Post object, we will look at the `:tag_string`, parse out the tags, 
+and adjust the Post model to reflect those tags.
+
+Here are the necessary changes to the Post class:
+
+```
+class Post
+  … 
+  
+  # Add :tag_string to attr_accessible
+  attr_accessible :title, :content, :user_id, :tag_string
+  …
+   
+  # before we save a post, we'll do our tag updates 
+  before_save :update_tags
+  …
+  
+  # and the function to update the tags
+  def update_tags
+    return unless tag_string
+    new_tag_names = tag_string.split(",").map { |t| t.strip.downcase }
+    new_tag_names.each do |tag_name| 
+      tag = Tag.where(name: tag_name)[0]
+      tag = Tag.create! name: tag_name unless tag
+      tags << tag unless tags.include? tag
+    end
+    tags.each { |t| (tags.remove t) unless (new_tag_names.include? t.name) }
+  end
+end
+```

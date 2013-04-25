@@ -23,7 +23,7 @@ class Post
   before_save :update_tags
     
   def formatted_tags
-    tags.collect(&:name).join ', ' 
+    tags.collect(&:name).join(', ')
   end
   
   def add_tag(tag)
@@ -36,7 +36,7 @@ class Post
     new_tag_names.each do |tag_name| 
       tag = Tag.where(name: tag_name)[0]
       tag = Tag.create! name: tag_name unless tag
-      add_tag tag 
+      tags << tag unless tags.include? tag
     end
     tags.each { |t| (tags.remove t) unless (new_tag_names.include? t.name) }
   end
