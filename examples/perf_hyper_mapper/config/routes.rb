@@ -2,31 +2,23 @@ Perf::Application.routes.draw do
   
   ## Inserts
   match "hyper_mapper/single_insert" => "Hyper#single_insert"
-  match "mongoid/single_insert" => "Mongoid#single_insert"
   
   match "hyper_mapper/:id/embedded_insert" => "Hyper#embedded_insert"
-  match "mongoid/:id/embedded_insert" => "Mongoid#embedded_insert"
   
   ## Updates
   match "hyper_mapper/:id/single_update" => "Hyper#single_update"
-  match "mongoid/:id/single_update" => "Mongoid#single_update"
   
   match "hyper_mapper/:id/:post_id/embedded_update" => "Hyper#embedded_update"
-  match "mongoid/:id/:post_id/embedded_update" => "Mongoid#embedded_update"
   
   ## Deletes
   match "hyper_mapper/:id/single_destroy" => "Hyper#single_destroy"
-  match "mongoid/:id/single_destroy" => "Mongoid#single_destroy"
 
   match "hyper_mapper/:id/:post_id/embedded_destroy" => "Hyper#embedded_destroy"
-  match "mongoid/:id/:post_id/embedded_destroy" => "Mongoid#embedded_destroy"
     
   # Queries
   match "hyper_mapper/:id/single_query" => "Hyper#single_query"
-  match "mongoid/:id/single_query" => "Mongoid#single_query"
 
   match "hyper_mapper/:id/:post_id/embedded_query" => "Hyper#embedded_query"
-  match "mongoid/:id/:post_id/embedded_query" => "Mongoid#embedded_query"
     
   # The priority is based upon order of creation:
   # first created -> highest priority.

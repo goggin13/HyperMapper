@@ -1,0 +1,64 @@
+# single insert
+  curl --data "user[username]=goggin13&user[bio]=hello world" \
+    localhost:3000/hyper_mapper/single_insert
+
+  httperf --hog \
+          --server localhost \
+          --port 3000 \
+          --uri "/hyper_mapper/single_insert?user[username]=goggin13&user[bio]=helloworld" \
+          --num-conns 1000
+  
+# single_update
+  curl -X PUT --data "user[username]=goggin13&user[bio]=hello world" \
+    localhost:3000/hyper_mapper/1367955034-3b242022-fa14-4388-8eb3-2d32e68c7f63/single_update
+
+  httperf --hog \
+          --server localhost \
+          --port 3000 \
+          --uri "/hyper_mapper/1367955034-3b242022-fa14-4388-8eb3-2d32e68c7f63/single_update?user[username]=goggin132&user[bio]=helloworld2" \
+          --num-conns 1000
+
+# single_query
+  curl localhost:3000/hyper_mapper/1367955034-3b242022-fa14-4388-8eb3-2d32e68c7f63/single_query
+  
+  httperf --hog \
+          --server localhost \
+          --port 3000 \
+          --uri "/hyper_mapper/1367955034-3b242022-fa14-4388-8eb3-2d32e68c7f63/single_query" \
+          --num-conns 1000
+  
+# embedded_insert
+  curl --data "post[title]=goggin13&post[content]=hello world" \
+    localhost:3000/hyper_mapper/1367955034-3b242022-fa14-4388-8eb3-2d32e68c7f63/embedded_insert
+  
+  httperf --hog \
+          --server localhost \
+          --port 3000 \
+          --uri "/hyper_mapper/1367955034-3b242022-fa14-4388-8eb3-2d32e68c7f63/embedded_insert?post[title]=goggin13&post[content]=helloworld" \
+          --num-conns 1000
+  
+# embedded_update  
+  curl -X PUT --data "post[title]=goggin&post[content]=hello world2" \
+    localhost:3000/hyper_mapper/1367955034-3b242022-fa14-4388-8eb3-2d32e68c7f63/1367955203-f7e51765-4688-44a4-b03b-08f363dd3db6/embedded_update
+
+  httperf --hog \
+          --server localhost \
+          --port 3000 \
+          --uri "/hyper_mapper/1367955034-3b242022-fa14-4388-8eb3-2d32e68c7f63/1367955203-f7e51765-4688-44a4-b03b-08f363dd3db6/embedded_update?post[title]=goggin13&post[content]=helloworld2" \
+          --num-conns 1000
+
+# embedded_query
+  curl localhost:3000/hyper_mapper/1367955034-3b242022-fa14-4388-8eb3-2d32e68c7f63/1367955203-f7e51765-4688-44a4-b03b-08f363dd3db6/embedded_query
+
+  httperf --hog \
+          --server localhost \
+          --port 3000 \
+          --uri "/hyper_mapper/1367955034-3b242022-fa14-4388-8eb3-2d32e68c7f63/5189478197c9a982ea0003ed/embedded_query" \
+          --num-conns 1000
+
+# embedded_destroy
+  curl -X DELETE \
+    localhost:3000/hyper_mapper/5185318470b44585c2000003/518532a870b44585c2000004/embedded_destroy
+
+# single_destroy
+  curl -X DELETE localhost:3000/hyper_mapper/51852f3470b44585c2000002/single_destroy

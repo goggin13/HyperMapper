@@ -11,7 +11,7 @@ class Post
   autogenerate_id
   attribute :title
   attribute :content
-  
+
   timestamps
   
   embedded_in :user
@@ -22,9 +22,16 @@ class User
 
   key :username
   attribute :email
+  
+  attribute :birthday, type: :datetime
+  attribute :weight, type: :float
+  attribute :iq, type: :int
 
   embeds_many :posts
 end
+
+
+
 
 user = User.create! username: 'goggin13', email: 'goggin13@gmail.com'
 

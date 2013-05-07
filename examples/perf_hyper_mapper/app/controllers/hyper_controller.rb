@@ -33,7 +33,7 @@ class HyperController < ApplicationController
     
   def embedded_insert
     @user = HyperUser.find(params[:id])
-  	@post = @user.posts.build params[:post]
+  	@post = @user.hyper_posts.build params[:post]
   	
     if @post.save
       render json: @post, status: :created
@@ -43,7 +43,7 @@ class HyperController < ApplicationController
   end
   
   def embedded_update
-    @post = HyperUser.find(params[:id]).posts.find(params[:post_id])
+    @post = HyperUser.find(params[:id]).hyper_posts.find(params[:post_id])
   	
     if @post.update_attributes params[:post]
       render json: @post
@@ -53,8 +53,13 @@ class HyperController < ApplicationController
   end
   
   def embedded_destroy
-    @post = HyperUser.find(params[:id]).posts.find(params[:post_id])
+    @post = HyperUser.find(params[:id]).hyper_posts.find(params[:post_id])
   	@post.destroy
     head :no_content
   end
+
+  def embedded_query
+    @post = HyperUser.find(params[:id]).hyper_posts.find(params[:post_id])
+    render json: @post
+  end   
 end
