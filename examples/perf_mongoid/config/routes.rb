@@ -1,24 +1,24 @@
 Perf::Application.routes.draw do
   
   ## Inserts
-  match "mongoid/single_insert" => "Mongoid#single_insert"
+  match "single_insert" => "Mongoid#single_insert"
   
-  match "mongoid/:id/embedded_insert" => "Mongoid#embedded_insert"
+  match ":id/embedded_insert" => "Mongoid#embedded_insert"
   
   ## Updates
-  match "mongoid/:id/single_update" => "Mongoid#single_update"
+  match ":id/single_update" => "Mongoid#single_update"
   
-  match "mongoid/:id/:post_id/embedded_update" => "Mongoid#embedded_update"
+  match ":id/:post_id/embedded_update" => "Mongoid#embedded_update"
   
   ## Deletes
-  match "mongoid/:id/single_destroy" => "Mongoid#single_destroy"
+  match ":id/single_destroy" => "Mongoid#single_destroy"
 
-  match "mongoid/:id/:post_id/embedded_destroy" => "Mongoid#embedded_destroy"
+  match ":id/:post_id/embedded_destroy" => "Mongoid#embedded_destroy"
     
   # Queries
-  match "mongoid/:id/single_query" => "Mongoid#single_query"
+  match ":id/single_query" => "Mongoid#single_query"
 
-  match "mongoid/:id/:post_id/embedded_query" => "Mongoid#embedded_query"
+  match ":id/:post_id/embedded_query" => "Mongoid#embedded_query"
     
   # The priority is based upon order of creation:
   # first created -> highest priority.
