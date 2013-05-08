@@ -6,7 +6,6 @@ module HyperMapper
       attr_writer :space_name      
       
       def space_name
-
         @space_name ||= (defined? Rails) ? "#{Rails.env}_#{self.name.tableize}" : self.name.tableize
       end
 

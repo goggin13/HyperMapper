@@ -1,19 +1,19 @@
 Perf::Application.routes.draw do
   
   ## Inserts
-  match "single_insert" => "Mongoid#single_insert"
+  match "single_insert" => "Hyper#single_insert"
   
-  match "embedded_insert" => "Mongoid#embedded_insert"
+  match "embedded_insert" => "Hyper#embedded_insert"
   
   ## Updates
-  match "single_update" => "Mongoid#single_update"
+  match "single_update" => "Hyper#single_update"
   
-  match "embedded_update" => "Mongoid#embedded_update"
+  match "embedded_update" => "Hyper#embedded_update"
   
   # Queries
-  match "single_query" => "Mongoid#single_query"
+  match "single_query" => "Hyper#single_query"
 
-  match "embedded_query" => "Mongoid#embedded_query"
+  match "embedded_query" => "Hyper#embedded_query"
     
   # The priority is based upon order of creation:
   # first created -> highest priority.

@@ -1,23 +1,23 @@
 httperf --hog --client=0/1 --server=localhost --port=3000 --uri=/embedded_update?queries=10 --send-buffer=4096 --recv-buffer=16384 --num-conns=1000 --num-calls=1
 Maximum connect burst length: 1
 
-Total: connections 1000 requests 1000 replies 1000 test-duration 61.171 s
+Total: connections 1000 requests 1000 replies 1000 test-duration 30.121 s
 
-Connection rate: 16.3 conn/s (61.2 ms/conn, <=1 concurrent connections)
-Connection time [ms]: min 44.8 avg 61.2 max 121.2 median 57.5 stddev 11.9
+Connection rate: 33.2 conn/s (30.1 ms/conn, <=1 concurrent connections)
+Connection time [ms]: min 17.2 avg 30.1 max 139.7 median 21.5 stddev 17.4
 Connection time [ms]: connect 0.1
 Connection length [replies/conn]: 1.000
 
-Request rate: 16.3 req/s (61.2 ms/req)
+Request rate: 33.2 req/s (30.1 ms/req)
 Request size [B]: 88.0
 
-Reply rate [replies/s]: min 15.8 avg 16.3 max 17.2 stddev 0.4 (12 samples)
-Reply time [ms]: response 61.0 transfer 0.0
-Reply size [B]: header 385.0 content 819.0 footer 0.0 (total 1204.0)
+Reply rate [replies/s]: min 29.2 avg 33.2 max 35.6 stddev 2.5 (6 samples)
+Reply time [ms]: response 30.0 transfer 0.0
+Reply size [B]: header 385.0 content 929.0 footer 0.0 (total 1314.0)
 Reply status: 1xx=0 2xx=1000 3xx=0 4xx=0 5xx=0
 
-CPU time [s]: user 8.94 system 51.79 (user 14.6% system 84.7% total 99.3%)
-Net I/O: 20.6 KB/s (0.2*10^6 bps)
+CPU time [s]: user 5.94 system 24.04 (user 19.7% system 79.8% total 99.5%)
+Net I/O: 45.5 KB/s (0.4*10^6 bps)
 
 Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
 Errors: fd-unavail 0 addrunavail 0 ftab-full 0 other 0

@@ -3,7 +3,7 @@ require 'hyper_mapper'
 class User
   include HyperMapper::Document
   
-  attr_accessible :username, :bio
+  attr_accessible :username, :bio, :_id
   
   key :_id, autogenerate: true
   attribute :username

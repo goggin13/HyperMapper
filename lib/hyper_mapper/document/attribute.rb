@@ -162,15 +162,16 @@ module HyperMapper
     
     def attributes_for_save
       attrs = attribute_values_map.inject({}) do |acc, (key, field)|
-        if field && field.dirty
+        if field && field.dirty?
           acc[key] = field.value
         end
         acc
       end
 
       self.class.embedded_classes.each do |children|
-        if self.send(children).length > 0
-          attrs[children] = self.send(children).to_json
+        child_objects = self.send(children)
+        if child_objects.length > 0 && attrs[children]
+          attrs[children] = child_objects.to_json
         else
           attrs.delete children
         end

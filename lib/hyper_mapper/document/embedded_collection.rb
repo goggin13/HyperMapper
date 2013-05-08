@@ -37,7 +37,7 @@ module HyperMapper
       end
 
       def find(id)
-        @elements[id]
+        @elements[id.to_s]
       end
 
       def remove(item)
@@ -53,7 +53,7 @@ module HyperMapper
       
       def <<(item)
         
-        @elements[item.key_value] = item
+        @elements[item.key_value.to_s] = item
         item.parent = @parent
         item.save unless item.persisted?
         

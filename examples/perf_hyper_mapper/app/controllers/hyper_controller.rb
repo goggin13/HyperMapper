@@ -30,7 +30,8 @@ class HyperController < ApplicationController
     results = (1..queries).map do
       # get a random row from the database, which we know has 10000
       # rows with ids 1 - 10000
-      user = User.find random_user_id
+      user_id = random_user_id
+      user = User.find user_id
       user.username = "user-#{random_user_id}"
       user.save
 

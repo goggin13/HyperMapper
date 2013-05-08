@@ -10,7 +10,7 @@ module HyperDex
       @client = HyperClient.new @address, @port
     end
 
-    def get(space, key) 
+    def get(space, key)   
       r = @client.get space, key
       r
     end
@@ -21,7 +21,7 @@ module HyperDex
         v = v.to_s if v.is_a? Symbol
         [k, v] 
       }
-      puts "#{space} : #{key} => #{formatted}"
+      # puts "#{space} : #{key} => #{formatted}"
       @client.put space, key, formatted 
     end
 
@@ -35,7 +35,7 @@ module HyperDex
         acc[k] = v
         acc
       }
-      puts "search #{space} => #{predicate}"
+      # puts "search #{space} => #{predicate}"
       r = @client.search space, predicate
       arr = []
       while r.has_next
@@ -46,10 +46,12 @@ module HyperDex
     end
 
     def map_remove(space, key, map_key)
+      # puts "map_remove #{space} - #{key} - #{map_key}"
       @client.map_remove space, key, map_key
     end
     
     def map_add(space, key, map_value)
+      # puts "map_add #{space} - #{key} - #{map_value}"
       @client.map_add space, key, map_value
     end
 

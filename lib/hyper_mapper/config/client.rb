@@ -1,3 +1,4 @@
+require 'hyperclient'
 
 module HyperMapper
   module Config

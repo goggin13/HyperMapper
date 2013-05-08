@@ -136,4 +136,11 @@ describe HyperMapper::Document::EmbeddedCollection do
       post.should_not be_persisted
     end
   end
+
+  describe "dirty" do
+
+    it "should not be marked as dirty when retrieved from a find" do
+      @user.attribute_values_map[:posts].should_not be_dirty
+    end
+  end
 end
