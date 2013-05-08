@@ -6,7 +6,8 @@ gem 'thin'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-gem 'HyperMapper', path: '/home/goggin/projects/rails/hyper_mapper'
+gem 'hyper_mapper', git: 'git@github.com:goggin13/HyperMapper.git'
+
 gem 'faker'
 
 group :test, :development do

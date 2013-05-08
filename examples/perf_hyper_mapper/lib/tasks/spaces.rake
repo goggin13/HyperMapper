@@ -1,7 +1,7 @@
 namespace :db do
   desc "Create spaces"
   task create_spaces: :environment do
-    system HyperUser.destroy_space
-    system HyperUser.create_space
+    system User.destroy_space
+    system User.create_space
   end
 end

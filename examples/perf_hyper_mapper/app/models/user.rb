@@ -1,13 +1,13 @@
 require 'hyper_mapper'
 
-class HyperUser
+class User
   include HyperMapper::Document
   
   attr_accessible :username, :bio
   
-  autogenerate_id
+  key :_id, autogenerate: true
   attribute :username
   attribute :bio
   
-  embeds_many :hyper_posts
+  embeds_many :posts
 end

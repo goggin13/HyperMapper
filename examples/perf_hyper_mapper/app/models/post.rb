@@ -1,14 +1,13 @@
 require 'hyper_mapper'
 
-class HyperPost
+class Post
   include HyperMapper::Document
   
   attr_accessible :title, :content, :user_id, :tag_string
   
-  autogenerate_id
+  key :_id, autogenerate: true
   attribute :title
   attribute :content
-  timestamps
   
-  embedded_in :hyper_user
+  embedded_in :user
 end

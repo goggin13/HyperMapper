@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'hyper_mapper/version'
 
 Gem::Specification.new do |gem|
-  gem.name          = "HyperMapper"
+  gem.name          = "hyper_mapper"
   gem.version       = HyperMapper::VERSION
   gem.authors       = ["Matt Goggin"]
   gem.email         = ["goggin13@gmail.com"]
