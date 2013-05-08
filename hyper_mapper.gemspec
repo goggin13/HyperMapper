@@ -8,9 +8,9 @@ Gem::Specification.new do |gem|
   gem.version       = HyperMapper::VERSION
   gem.authors       = ["Matt Goggin"]
   gem.email         = ["goggin13@gmail.com"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
-  gem.homepage      = ""
+  gem.description   = %q{An ODM for HyperDex, a distributed key-value store}
+  gem.summary       = %q{An ODM for HyperDex, a distributed key-value store}
+  gem.homepage      = "http://hyperdex.org/"
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
