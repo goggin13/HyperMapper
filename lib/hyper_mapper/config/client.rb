@@ -9,5 +9,30 @@ module HyperMapper
     def client
       @client ||= HyperDex::Client.new(HyperMapper::Config.config)
     end
+    
+    def config
+      @config || defaults
+    end
+
+    def defaults
+      @defauts ||= load_defaults
+    end
+
+    def default_config_path
+      "lib/hyper_mapper/config/config.yml"
+    end
+    
+    def load_from_file(path)
+      @client = nil
+      @config = YAML.load(File.read(path))
+    end
+
+    def load_defaults
+      load_from_file default_config_path
+    end
+
+    def path
+      config['path'] || 'hyperdex'
+    end    
   end
 end

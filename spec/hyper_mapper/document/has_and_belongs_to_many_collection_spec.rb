@@ -64,8 +64,12 @@ describe HyperMapper::Document::HasAndBelongsToManyCollection do
   
   describe "<<" do
     
-    xit "should add an item to the collection" do
-      
+    it "should add an item to the collection" do
+      tag = Tag.new(name: 'cycling', description: 'riding a bicylce')
+      stub_put 'tags', 'cycling', {description: 'riding a bicylce'}
+      stub_auto_id_put 'article_tags', {'article_id' => @article_id, 'tag_name' => 'cycling'}
+      @collection << tag
+      tag.should be_persisted
     end
   end
   

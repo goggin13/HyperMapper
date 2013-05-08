@@ -60,10 +60,11 @@ describe HyperMapper::Document::EmbeddedCollection do
       }
     end
     
-    it "should add an xitem to the collection" do
+    it "should add an item to the collection" do
       post = Post.new id: '3', title: 'hello'
       @collection << post
       @collection.find('3').should == post
+      post.should be_persisted
     end
   end
   

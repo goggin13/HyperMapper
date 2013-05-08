@@ -30,6 +30,7 @@ module HyperMapper
         params = {}
         params[@parent_class.foreign_key] = @parent.key_value
         params[@klass.foreign_key] = item.key_value
+        item.save unless item.persisted?
         @join_class.create! params
       end
 
@@ -51,7 +52,6 @@ module HyperMapper
 
       def build(params={})
         item = @klass.new params
-        self.<< item
         item 
       end
 

@@ -82,6 +82,7 @@ describe 'HyperMapper::Document::HasAndBelongsToMany' do
 
     it "should be able to be added to" do
       post = Article.new title: 'test', id: 'id'
+      stub_put 'articles', 'id', {title: 'test'}
       stub_auto_id_put 'article_tags', {article_id: 'id', tag_name: @tag.name}
       @tag.articles << post
     end
