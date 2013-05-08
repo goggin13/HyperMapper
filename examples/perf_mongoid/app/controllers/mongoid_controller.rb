@@ -1,8 +1,10 @@
 class MongoidController < ApplicationController
   
-  # curl --data "user[username]=goggin13&user[bio]=hello world" localhost:3000/mongoid/single_insert
+  MAX_USER_ID = 10000
+  MAX_POST_ID = 25
+  
   def single_insert
-    @user = MongoidUser.new(params[:user])
+    @user = User.new(params[:user])
 
     if @user.save
       render json: @user, status: :created
@@ -11,57 +13,82 @@ class MongoidController < ApplicationController
     end
   end
   
-  # curl --data "user[username]=goggin13&user[bio]=hello world" localhost:3000/mongoid/single_insert
-  def single_update
-    @user = MongoidUser.find(params[:id])
-
-    if @user.update_attributes(params[:user])
-      render json: @user
-    else
-      render json: @user.errors, status: :unprocessable_entity
-    end
-  end
-  
-  def single_destroy
-    @user = MongoidUser.find(params[:id])
-    @user.destroy
-    head :no_content
-  end
-  
   def single_query
-    @user = MongoidUser.find(params[:id])
-    render json: @user
-  end
-    
-  def embedded_insert
-    @user = MongoidUser.find(params[:id])
-  	@post = @user.mongoid_posts.build params[:post]
-  	
-    if @post.save
-      render json: @post, status: :created
-    else
-      render json: @post.errors, status: :unprocessable_entity
+    queries = (params[:queries] || 1).to_i
+
+    results = (1..queries).map do
+      # get a random row from the database, which we know has 10000
+      # rows with ids 1 - 10000
+      User.find random_user_id
     end
+    render :json => results
+  end
+
+  def single_update
+    queries = (params[:queries] || 1).to_i
+
+    results = (1..queries).map do
+      # get a random row from the database, which we know has 10000
+      # rows with ids 1 - 10000
+      user = User.find random_user_id
+      user.username = "user-#{random_user_id}"
+      user.save
+
+      user
+    end
+    render :json => results
+  end
+  
+  def embedded_insert
+    queries = (params[:queries] || 1).to_i
+
+    results = (1..queries).map do
+      # get a random row from the database, which we know has 10000
+      # rows with ids 1 - 10000
+      user = User.find random_user_id
+    	post = user.posts.build params[:post]
+      post.save
+
+      post
+    end
+    render :json => results    
   end
   
   def embedded_update
-    @post = MongoidUser.find(params[:id]).mongoid_posts.find(params[:post_id])
-  	
-    if @post.update_attributes params[:post]
-      render json: @post
-    else
-      render json: @post.errors, status: :unprocessable_entity
-    end   
-  end
-  
-  def embedded_destroy
-    @post = MongoidUser.find(params[:id]).mongoid_posts.find(params[:post_id])
-  	@post.destroy
-    head :no_content
+    queries = (params[:queries] || 1).to_i
+
+    results = (1..queries).map do
+      # get a random row from the database, which we know has 10000
+      # rows with ids 1 - 10000
+      user = User.find random_user_id
+    	post = user.posts.find random_post_id
+    	post.title = "new title -> #{random_post_id}"
+      post.save
+
+      post
+    end
+    render :json => results    
   end
   
   def embedded_query
-    @post = MongoidUser.find(params[:id]).mongoid_posts.find(params[:post_id])
-  	render json: @post
-  end  
+    queries = (params[:queries] || 1).to_i
+
+    results = (1..queries).map do
+      # get a random row from the database, which we know has 10000
+      # rows with ids 1 - 10000
+      User.find(random_user_id).posts.find(random_post_id)
+    end
+    render :json => results
+  end
+  
+  private
+    
+    def random_post_id
+      Random.rand(MAX_POST_ID) + 1
+    end
+    
+    def random_user_id
+      Random.rand(MAX_USER_ID) + 1
+    end
+    
 end

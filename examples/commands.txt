@@ -24,7 +24,7 @@
   httperf --hog \
           --server localhost \
           --port 3000 \
-          --uri "/1367955034-3b242022-fa14-4388-8eb3-2d32e68c7f63/single_query" \
+          --uri "/single_query" \
           --num-conns 1000
   
 # embedded_insert
