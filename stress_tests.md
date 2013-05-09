@@ -2,7 +2,7 @@
 
 This post summarizes my findings of some very simple stress tests comparing the performance in Rails of [HyperDex](hyperdex.org) running behind the [HyperMapper Object Document Mapper](https://github.com/goggin13/HyperMapper) with [Mongo](http://www.mongodb.org/) running behing the [Mongoid Object Document Mapper](Mongoid.org).
 
-My tests relied on [httperf](http://www.hpl.hp.com/research/linux/httperf/) to generate and measure HTTP requests against two applications running the relevant code.  
+My tests relied on [httperf](http://www.hpl.hp.com/research/linux/httperf/) to generate and measure HTTP requests against two applications running the relevant code.  The code for the tests was inspired by, and in some cases directly taken from, [Tech Empower Web Framework Benchmarks](http://www.techempower.com/benchmarks/).
 
 ### Setup
 
