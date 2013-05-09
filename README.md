@@ -2,9 +2,9 @@
 
 ## Overview
 
-HyperMapper is an Ruby Object Document Mapper for [HyperDex](http://hyperdex.org/), a new NoSQL store from Cornell University.  It has been tested in Ruby 1.9.3, and plays nicely with Rails 3.2.x.
+HyperMapper is an Ruby Object Document Mapper for [HyperDex](http://hyperdex.org/), a new NoSQL store from Cornell University.  It has been tested in Ruby 1.9.3, and plays nicely with Rails 3.2.x. 
 
-HyperMapper, like HyperDex itself is a work in progress and is not well vetted in production.  Please, I welcome any feedback, pull-requests, issues, etc.., either here on Github, or find me at [goggin13@gmail.com](mailto:goggin13@gmail.com).
+HyperMapper, like HyperDex itself is a work in progress and is not (yet) well vetted in production.  Please, I welcome any feedback, pull-requests, issues, etc.., either here on Github, or find me at [goggin13@gmail.com](mailto:goggin13@gmail.com).
 
 ## Examples
 ```

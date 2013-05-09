@@ -2,7 +2,7 @@
 
 This tutorial will walk through the construction of a basic application using HyperDex, HyperMapper and Rails.  Like any good Hello World demo, we'll be building a very basic blogging application. 
 
-You can see the finished application in the [example source code](https://github.com/goggin13/HyperMapper/tree/master/examples/hyper_blog).
+You can see the finished application in the [example source code](https://github.com/goggin13/HyperMapperExamples/tree/master/HyperMapperDemo).  This is just a skeletal app; if you would like to look at a slightly more polished implementation of this same basic code, [check one out here](https://github.com/goggin13/HyperMapperExamples/tree/master/hyper_blog).
 
 ### Prerequisites
 
@@ -13,20 +13,49 @@ Additionally, I presume that you have built Rails applications before.  If you'r
 this tutorial without any previous HyperDex experience.
 
 If don't feel like meddling with set up tasks, you may wish to do the tutorial on an EC2 instance.  We have 
-provided an AMI with all of the requisite software (TODO INSERT AMI ID).
+provided an AMI with all of the requisite software (ami-51dfb338).
 
-## Creating the Application
+The AMI has all of the required libraries checked out as git repositories and it is  
+ 
+**NOT RECOMMENDED FOR USE IN PRODUCTION**
+
+The current package releases of HyperDex do not yet support the ruby client; a subsequent release should fix this issue.  Just the cost of being on the bleeding edge.  
+
+## Starting HyperDex
+
+If you are using the AMI, then these two commands will fire up a HyperDex coordinator and a single daemon.
+
+```
+./tasks/start_local_coordinator.sh  
+./tasks/start_local_daemon.sh
+```
+
+If you are running on your own machine, these commands will do the same:  
+
+```
+hyperdex coordinator -f -l 127.0.0.1 -p 1982 --daemon  
+hyperdex daemon -f --listen=127.0.0.1 \  
+                   --listen-port=2012 \  
+                   --coordinator=127.0.0.1 \  
+                   --coordinator-port=1982 \  
+                   --data=/home/ubuntu/data/daemon_data \  
+                   --daemon  
+```
+
+Note that both of these commands should be run from their own directory; the hyperdex programs like to write log files to their current directory, and they will conflict with one another.  The scripts on the AMI will take care of this for you.  
+
+## Creating the Rails Application
 
 We'll start with a new blank Rails app.  
 
 ```
-~/# rails new HyperMapperDemo
+~/# rails new HyperMapperDemo --skip-active-record
 ```
 
 Add the HyperMapper gem to your Gemfile
 
 ```
-gem 'HyperMapper'
+gem 'hyper_mapper', git: 'https://github.com/goggin13/HyperMapper.git'
 ```
 
 And run 
@@ -35,20 +64,30 @@ And run
 bundle install
 ```
 
+## HyperDex config
+
+Add the following two files to tell HyperMapper about your HyperDex installation:
+
+config/hyper_mapper.yml
+
+```
+host: 127.0.0.1
+port: 1982
+```
+
+config/initializers/hyper_mapper.rb
+
+```
+require 'hyper_mapper'
+HyperMapper::Config.load_from_file 'config/hyper_mapper.yml'
+```
 
 ## Users
-
-Generating migrations is not yet supported, so we'll have to create the User space ourselves.  HyperMapper will give us a hand formatting the command however.  `User.create_space` returns a string that we can pass to the Ruby `system` call to create our new space:
-
-```
-~/# rails c
-1.9.3p392 :001 > system(User.create_space)
-```
 
 Now we can start with the standard Rails generate command.
 
 ```
-rails generate scaffold User username:string bio:text
+rails generate scaffold User username:string password:string bio:text
 ```
 
 We'll start with our User model. Instead of inheriting from ActiveRecord, we will include the HyperMapper::Document module.
@@ -81,13 +120,21 @@ class User
 end
 ```
 
-That's all it takes to start! If you fire up your Rails server you should be able to CRUD in HyperDex all the users you desire.  We aimed to support as much querying and creation functionality that you will be familiar with from using ActiveRecord in Rails.  You can call ```User.create!```, or ```User.new(username: "Matt", bio: "Hello world")```, or ```User.find('some_user_id')```.  Check out [the docs](TODO INSERT LINK) for the rest of the Document API. But for now, you don't need to touch anything, as all the code from the scaffold generator will work as is.
+Generating migrations is not yet supported, so we'll have to create the User space ourselves. `User.create_space` will do the work of making a call to the HyperDex client to create the new space.
+
+```
+~/# rails c
+1.9.3p392 :001 > User.create_space
+```
+
+
+That's all it takes to start! If you fire up your Rails server you should be able to CRUD in HyperDex all the users you desire.  We aimed to support as much querying and creation functionality that you will be familiar with from using ActiveRecord in Rails.  You can call ```User.create!```, or ```User.new(username: "Matt", bio: "Hello world")```, or ```User.find('some_user_id')```.  Check out [the docs](TODO INSERT LINK) for the rest of the Document API. But for now, you don't need to touch anything, as all the code from the scaffold generator will work as is. Start your Rails server and checkout `/users` to try out your first HyperDex CRUD operations through Rails.
 
 
 #### Validations
 Since HyperMapper includes many of the ActiveModel modules, we have access to validators and callback hooks.
 
-Let's add some simple validators, just like we would in our ActiveRecord model.
+Let's add some simple validators, just like we would in a ActiveRecord model.
 
 
 ```
@@ -153,7 +200,7 @@ module SessionHelper
 
   # delete the stored session cookie for this user
   def sign_out_user(user)
-    user.session_id = nil
+    user.session_id = ''
     user.save
     cookies.delete :session_id
   end
@@ -182,11 +229,21 @@ module SessionHelper
   def redirect_unless_signed_in
     unless signed_in?
       flash[:notice] = "You must be logged in to access #{request.fullpath}"
-      redirect_to root_path
+      redirect_to users_path
     end
   end  
 end
 ```
+
+And we'll need to include our helper in our base controller, `app/controllers/application_controller`.  
+
+```
+class ApplicationController < ActionController::Base
+  protect_from_forgery
+  include SessionHelper
+end
+```
+
 
 #### Controller
 
@@ -215,7 +272,7 @@ class SessionsController < ApplicationController
   def destroy
     flash[:notice] = "Logged out #{current_user.username}"
 	  sign_out_user
-	  redirect_to root_path
+	  redirect_to users_path
   end
 
 end
@@ -224,7 +281,7 @@ end
 
 #### Form
 
-And the login form
+And the login form at `app/views/sessions/new.html.erb`  
 
 
 ```
@@ -262,16 +319,27 @@ HyperBlog::Application.routes.draw do
 end
 ```
 
+At this point you can log in and log out, but you don't see much visual feedback.  Let's add this simple snippet to `application.html.erb` so we have some idea of when we are logged in or not.  
+
+`app/views/layouts/application.html.erb`
+
+```
+<body>
+
+<% if signed_in? %>
+  <%= link_to 'Sign out', session_path(current_user), method: :delete %>
+<% else %>
+  <%= link_to 'Sign in', new_session_path %>
+<% end %>
+
+<%= yield %>
+
+</body>
+```
+
 ## Posts
 
 We'll choose to implement our Post class as a separate entity.  A User will likely have many different posts,  which together could consitutute a reasonable amount of data that we don't want to load every time we want to load a User.
-
-As we did with our User model, we'll create the new space ourselves via `rails c`.
-
-```
-~/# rails c
-1.9.3p392 :001 > system(Post.create_space)
-```
 
 And the Rails scaffold generator will be a good place to start again:
 
@@ -279,7 +347,7 @@ And the Rails scaffold generator will be a good place to start again:
 rails generate scaffold Post title:string user_id:string content:text
 ```
 
-And, again, we modify the generated Post model to include HyperMapper::Document.
+And, again, we create our Post model including HyperMapper::Document.
 
 ```
 class Post
@@ -316,6 +384,26 @@ class User
   … 
 end
 ```
+
+As we did with our User model, we'll create the new space ourselves via `rails c`.
+
+Comments are coming in the next section, but in order to run the new create_space command without complaint, you'll need to create a stubbed out Comment model
+
+`app/models/comment.rb` 
+
+```
+class Comment
+  include HyperMapper::Document
+end
+```
+
+And now we can run the create_space command
+
+```
+~/# rails c
+1.9.3p392 :001 > Post.create_space
+```
+
 
 Let's also head over the the `PostController` and ensure that Users who are creating and editing posts are authenticated, as well as assigning those posts to the current_user.
 
@@ -366,7 +454,9 @@ The scaffolding seems abusive here, so let's do this one by hand. Starting with 
 ```
 class Comment
   include HyperMapper::Document
-	
+
+  attr_accessible :text, :user_id
+
   autogenerate_id
   attribute :text
   attribute :user_id
@@ -378,18 +468,7 @@ class Comment
 end
 ```
 
-We'll create a form for creating comments at `app/views/comments/_form.html.erb`:
-
-```
-<%= form_for(:comment, url: post_comments_path(@post)) do |f| %>
-    <%= f.text_field :text, autocomplete: :off %><br/>
-    <%= f.hidden_field :post_id, value: @post.id %>
-    <%= f.submit "Comment" %>
-  <% end %>
-<% end %>
-```
-
-We'll create a `CommentController` with the following code
+We'll create a `CommentsController` with the following code
 
 ```
 class CommentsController < ApplicationController
@@ -424,7 +503,7 @@ class CommentsController < ApplicationController
 end
 ```
 
-Now once we add the form to the post page at `app/views/posts/show.html.erb` we will be able to create comments from the post page. 
+Now once we add a form to the post page at `app/views/posts/show.html.erb` we will be able to create comments from the post page. We'll also add an (excruciatingly crude) list of comments on this post.
 
 ```
 <% if signed_in? %>
@@ -433,13 +512,18 @@ Now once we add the form to the post page at `app/views/posts/show.html.erb` we 
     <%= link_to 'Edit', edit_post_path(@post) %>
   <% end %>
 
-  <%= form_for(:comment, url: post_comments_path(@post), remote: true) do |f| %>
+  <%= form_for(:comment, url: post_comments_path(@post)) do |f| %>
     <%= f.text_field :text, autocomplete: :off %><br/>
     <%= f.hidden_field :post_id, value: @post.id %>
     <%= f.submit "Comment" %>
   <% end %>
   
 <% end %>
+
+<% @post.comments.each do |comment| %>
+  <%= comment.text %> <br/>
+<% end %>
+
 ```
 
 ## Tags
@@ -486,17 +570,30 @@ As before, we will create the spaces with `rails c`
 
 ```
 ~/# rails c
-1.9.3p392 :001 > system(Tag.create_space)
-1.9.3p392 :002 > system(PostTag.create_space)
+1.9.3p392 :001 > Tag.create_space
+1.9.3p392 :002 > PostTag.create_space
 ```
 
-In order to facilitate creating tags, we'll add a text field to the post form, which accepts a comma a comma delimted list of tags.
+In order to facilitate creating tags, we'll add a text field to the post form, which accepts a comma delimted list of tags.
+
+`app/views/posts/_form.html.erb`
 
 ```
   <div class="field">
     <%= f.label :tag_string, "Comma delimited tags" %><br />
-    <%= f.text_field :tag_string, value: @post.tags.collect(&:name).join(', ') %>
+    <%= f.text_field :tag_string, value: @post.tags_as_string %>
   </div> 
+```
+
+We'll add the formatted tags to our post view as well:
+
+```app/views/posts/show.html.erb```
+
+```
+  <p>
+    <b>Content:</b>
+    <%= @post.tags_as_string %>
+  </p>
 ```
 
 And whenever we save a Post object, we will look at the `:tag_string`, parse out the tags, 
@@ -507,6 +604,9 @@ Here are the necessary changes to the Post class:
 ```
 class Post
   … 
+  
+  # Create a field in memory to store the tag string
+  attr_accessor :tag_string
   
   # Add :tag_string to attr_accessible
   attr_accessible :title, :content, :user_id, :tag_string
@@ -520,12 +620,19 @@ class Post
   def update_tags
     return unless tag_string
     new_tag_names = tag_string.split(",").map { |t| t.strip.downcase }
+    current_tag_names = tags.collect(&:name)
     new_tag_names.each do |tag_name| 
-      tag = Tag.where(name: tag_name)[0]
-      tag = Tag.create! name: tag_name unless tag
-      tags << tag unless tags.include? tag
+      unless current_tag_names.include? tag_name
+        tag = Tag.where(name: tag_name)[0]
+        tag = Tag.create! name: tag_name unless tag
+        self.tags << tag 
+      end
     end
     tags.each { |t| (tags.remove t) unless (new_tag_names.include? t.name) }
+  end
+  
+  def tags_as_string
+  	tags.collect(&:name).join(', ')
   end
 end
 ```
