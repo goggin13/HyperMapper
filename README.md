@@ -166,7 +166,7 @@ end
 ##### :: attr_accessible(attributes=[])
 Defines the attributes that may be modified via mass assignment (through calls to `new`, `create`, or `update_attributes`). 
 	
-##### :: key
+##### :: key(name)
 Defines the attribute that will serve as this objects key attribute.  Either this or `autogenerate_id` is required to be defined. 
 
 ```
@@ -229,7 +229,7 @@ end
 
 Now, `post.comments` returns a `HyperMapperCollection` which can be queried, manipulated and added to.   
 
-##### :: embedded_in
+##### :: embedded_in(parent_class_name)
 The converse of `embeds_many`, defines a singular method on the child to retrieve the parent object.  An embedded object does not occupy a HyperDex space, but exists only as an element of a field on it's parent.
 
 ```
@@ -297,7 +297,7 @@ Sets the given attributes to the passed values; any key in `attributes` must hav
 user.update_attributes! username: "mg343", email: "mg343@cornell.edu"
 ```
 
-##### \# update_attributes!
+##### \# update_attributes!(attributes={})
 Identical to `update_attributes`, but `update_attributes!` will raise `HyperMapper::Exceptions::ValidationException` On validation errors.
 
 ##### \# destroy
@@ -307,13 +307,83 @@ Remove this object from HyperDex.
 Returns true if the given object has been persisted.  
 
 ### HyperMapperCollection
-##### \# find
-##### \# where
-##### \# remove
-##### \# <<
-##### \# each
+
+These functions represent the API provided for relationships in HyperMapper; namely, a `HyperMapperCollection` is returned from calls to a child class defined via `has_many`, `embeds_many` or `has_and_belongs_to_many`, and offers the API defined below.
+
+`HyperMapperCollection` also supports the [Ruby Enumerable API](http://ruby-doc.org/core-2.0/Enumerable.html) (but not the enumerable comparator features, e.g. `#max`, `#sort`, etc).
+
+##### \# find(id)
+Returns an element of the child collection with the given ID.
+
+```
+post = user.posts.find(4)
+```
+
+##### \# where(predicate)
+Returns an array of the child collection that matches the given predicate.  
+
+*where is not supported on embedded collections*
+
+```
+posts = user.posts.where(title: "hello world")
+```
+
+##### \# remove(item)
+Removes the given item from this collection; in the case of an embedded object this deletes it from HyperDex.
+
+```
+post = user.posts.find(4)
+user.posts.remove(post)
+```
+
+##### \# <<(item)
+Adds a new item to this collection.
+
+```
+post = Post.new(title: "test", content: "content")
+user.posts << post
+```
+
+##### \# each(&block)
+Iterates the collection and calls the given block for each item.
+
+```
+user.posts.each do |post|
+  puts post.title, post.content
+end
+```
+
 ##### \# length
+The number of elements in the child collection.
+
+```
+user.posts.length
+```
+
 ##### \# all
-##### \# create
-##### \# create!
-##### \# build
+Returns an array of all the objects in the child collection.
+
+##### \# create(attributes)
+Create and persist a new object with the given attributes, and assign it to this collection. On failures, `.valid?` will return false, and `.errors` will be populated.  Any key in `attributes` must have been listed in a call to `attr_accessible`, otherwise a `HyperMapper::Exceptions::MassAssignmentException` is thrown.  
+
+post = user.posts.create(title: "test", content: "content")
+if post.valid? 
+  puts "success"
+else
+  post.errors.full_messages.each { |err| puts err }
+end
+
+##### \# create!(attributes)
+Identical to `HyperMapperCollection#create`, but `create!` will raise `HyperMapper::Exceptions::ValidationException` On validation errors.
+
+##### \# build(attributes)
+Returns a non-persisted child item belonging to this collection.
+
+```
+post = user.posts.build.create(title: "test", content: "content")
+if post.save 
+  puts "success"
+else
+  post.errors.full_messages.each { |err| puts err }
+end
+```
