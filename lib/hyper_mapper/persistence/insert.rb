@@ -43,20 +43,18 @@ module HyperMapper
           subspaces << children
         end
 
-        cmd = <<-BASH
-#{Config.path} add-space <<EOF
+        cmd = <<EOF
 space #{space_name} 
 key #{key_name}
 attributes #{attr_names.reject(&:nil?).join ', '}
 subspace #{subspaces.join ', '}
 tolerate #{t} failures
 EOF
-BASH
-        cmd
+        Config.client.add_space cmd
       end
 
       def destroy_space
-        cmd = "#{Config.path} rm-space #{space_name}"
+        Config.client.rm_space space_name
       end
     end
   end

@@ -66,6 +66,18 @@ module HyperDex
       end
     end
     
+    def async_get(space, key) 
+      @client.async_get space, key
+    end
+    
+    def add_space(spec)
+      @client.add_space spec
+    end
+    
+    def rm_space(spec)
+      @client.rm_space spec
+    end
+    
     def cond_put(space, key, condition, attrs) end
     def atomic_add(space, key, value) end
     def atomic_sub(space, key, value) end
@@ -92,11 +104,6 @@ module HyperDex
     def map_atomic_xor(space, key, value) end
     def map_string_prepend(space, key, value) end
     def map_string_append(space, key, value) end
-    
-    def async_get(space, key) 
-      @client.async_get space, key
-    end
-
     def async_put(space, key, value) end
     def async_cond_put(space, key, condition, value) end
     def async_delete(space, key) end
@@ -127,24 +134,5 @@ module HyperDex
     def async_map_string_append(space, key, value) end
     def async_set_union(space, key, value) end
     def loop() end
-    
-    def add_space() end
-    def rm_space() end
-
-    def create_space
-       cmd = '/home/goggin/projects/install/bin/hyperdex '
-       cmd += 'add-space '
-       cmd += "space #{space_name} "
-       cmd += "key #{keyname} "
-       cmd += "attributes "
-       cmd += "subspace "
-       cmd += "tolerate 2 failures"
-       system(cmd)
-    end
-
-    def destroy_space
-      cmd = '/home/goggin/projects/install/bin/hyperdex '
-      cmd += "rm-space #{space_name}"
-    end
   end
 end
