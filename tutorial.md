@@ -12,7 +12,7 @@ Additionally, I presume that you have built Rails applications before.  If you'r
 [HyperDex](http://hyperdex.org/) that doesn't hurt, but you should be just fine getting through 
 this tutorial without any previous HyperDex experience.
 
-If don't feel like meddling with set up tasks, you may wish to do the tutorial on an EC2 instance.  We have 
+If you don't feel like meddling with set up tasks, you may wish to do the tutorial on an EC2 instance.  We have 
 provided an AMI with all of the requisite software (ami-51dfb338).
 
 The AMI has all of the required libraries checked out as git repositories and it is  
