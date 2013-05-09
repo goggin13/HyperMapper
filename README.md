@@ -85,9 +85,11 @@ comment = post.comments.create! text: "hello world", user_id: user.id
 ### HyperDocument
 
 #### Queries
+
+These query operators **are not** defined for embedded objects. 
+
 ##### :: where(predicate={})
 Returns a Ruby array of objects which match the given predicate.
-~> only defined for Documents, and not embedded objects. 
 
 ```
 User.where(age: 25)
