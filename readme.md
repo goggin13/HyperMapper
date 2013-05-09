@@ -6,6 +6,8 @@ HyperMapper is an Ruby Object Document Mapper for [HyperDex](http://hyperdex.org
 
 HyperMapper, like HyperDex itself is a work in progress and is not (yet) well vetted in production.  Please, I welcome any feedback, pull-requests, issues, etc.., either here on Github, or find me at [goggin13@gmail.com](mailto:goggin13@gmail.com).
 
+In addition to the API specifications listed below, I recommend the [tutorial on using in Rails](https://github.com/goggin13/HyperMapper/edit/master/tutorial.md) as a good resource to get started.
+
 ## Examples
 ```
 class User
