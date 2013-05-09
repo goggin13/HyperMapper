@@ -1,4 +1,8 @@
-require 'hyperclient'
+begin
+  require 'hyperclient'
+rescue LoadError
+  puts 'You need to install HyperDex with Ruby bindings enabled'
+end
 
 module HyperMapper
   module Config

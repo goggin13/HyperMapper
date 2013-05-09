@@ -7,8 +7,8 @@ describe 'HyperMapper::Document::Embed' do
     @attrs = {username: 'goggin13',
               email: 'goggin13@example.com',
               posts: [
-                       {title: 'Hello world', id: 1},
-                       {title: 'Goodbye world', id: 2}
+                       {title: 'Hello world', id: '1'},
+                       {title: 'Goodbye world', id: '2'}
                      ]}
     @user = User.new @attrs
     stub_any_put 'users', 'goggin13'
@@ -35,8 +35,8 @@ describe 'HyperMapper::Document::Embed' do
       posts[1].should be_a Post
       posts[0].title.should == 'Hello world'
       posts[1].title.should == 'Goodbye world'
-      posts[0].id.should == 1
-      posts[1].id.should == 2
+      posts[0].id.should == '1'
+      posts[1].id.should == '2'
     end
     
     it "should not mark the returned posts from new as persisted" do
@@ -149,7 +149,7 @@ describe 'HyperMapper::Document::Embed' do
     describe "destroy" do
 
       before do
-        stub_map_remove "users", "goggin13", {"posts" => {1 => 'dummy'}}
+        stub_map_remove "users", "goggin13", {"posts" => {'1' => 'dummy'}}
       end
 
       it "should remove the post" do

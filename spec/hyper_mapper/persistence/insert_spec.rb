@@ -32,39 +32,36 @@ describe 'HyperMapper::Persistence' do
   describe "create_space" do
 
     it "should generate the add-space command" do
-      command = <<-BASH
-/home/goggin/projects/install/bin/hyperdex add-space <<EOF
+      command = <<EOF
 space users 
 key username
 attributes email, map(string, string) posts
 subspace username, email, posts
 tolerate 2 failures
 EOF
-BASH
-
-      User.create_space.should == command
+      @client.should_receive(:add_space).with(command)
+      User.create_space
     end
 
     it "should include the right data types" do
-      command = <<-BASH
-/home/goggin/projects/install/bin/hyperdex add-space <<EOF
+      command = <<EOF
 space user_attributes 
 key username
 attributes test_string, int test_int, float test_float, int test_datetime
 subspace username, test_string, test_int, test_float, test_datetime
 tolerate 2 failures
 EOF
-BASH
-      
-      UserAttribute.create_space.should == command
+
+      @client.should_receive(:add_space).with(command)
+      UserAttribute.create_space
     end    
   end
 
   describe "destroy_space" do
 
     it "should generate the rm-space command" do
-      cmd = "/home/goggin/projects/install/bin/hyperdex rm-space users"
-      User.destroy_space.should == cmd
+      @client.should_receive(:rm_space).with('users')
+      User.destroy_space
     end
   end
 end
