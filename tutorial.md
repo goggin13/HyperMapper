@@ -590,10 +590,10 @@ We'll add the formatted tags to our post view as well:
 ```app/views/posts/show.html.erb```
 
 ```
-  <p>
-    <b>Content:</b>
-    <%= @post.tags_as_string %>
-  </p>
+    <p>
+        <b>Content:</b>
+        <%= @post.tags_as_string %>
+    </p>
 ```
 
 And whenever we save a Post object, we will look at the `:tag_string`, parse out the tags, 
