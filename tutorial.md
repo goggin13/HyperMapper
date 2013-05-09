@@ -128,7 +128,7 @@ Generating migrations is not yet supported, so we'll have to create the User spa
 ```
 
 
-That's all it takes to start! If you fire up your Rails server you should be able to CRUD in HyperDex all the users you desire.  We aimed to support as much querying and creation functionality that you will be familiar with from using ActiveRecord in Rails.  You can call ```User.create!```, or ```User.new(username: "Matt", bio: "Hello world")```, or ```User.find('some_user_id')```.  Check out [the docs](TODO INSERT LINK) for the rest of the Document API. But for now, you don't need to touch anything, as all the code from the scaffold generator will work as is. Start your Rails server and checkout `/users` to try out your first HyperDex CRUD operations through Rails.
+That's all it takes to start! If you fire up your Rails server you should be able to CRUD in HyperDex all the users you desire.  We aimed to support as much querying and creation functionality that you will be familiar with from using ActiveRecord in Rails.  You can call ```User.create!```, or ```User.new(username: "Matt", bio: "Hello world")```, or ```User.find('some_user_id')```.  Check out [the docs](https://github.com/goggin13/HyperMapper/blob/master/readme.md) for the rest of the Document API. But for now, you don't need to touch anything, as all the code from the scaffold generator will work as is. Start your Rails server and checkout `/users` to try out your first HyperDex CRUD operations through Rails.
 
 
 #### Validations
