@@ -39,10 +39,14 @@ Througout the code samples you will see references to these two functions
   end
 ```  
 
+
+
 ### Non-Embedded Results
 
+#### In all graphs, the Y-axis represents "replies/second"
+
 #### single insert  
-This test performed created a single new object, and returns the JSON after the object has been persisted.   
+This test created a single new object, and returns the JSON after the object has been persisted.   
 
 ```
   def single_insert
@@ -58,7 +62,7 @@ This test performed created a single new object, and returns the JSON after the 
 ![image](https://s3.amazonaws.com/matt-goggin/random/hyper-mapper/single_insert.png)  
 
 #### single query  
-This test retrieves a single object, chosen at random from a known existing set of objects, and returns the object formatted as JSON.  
+This test retrieves a single object, chosen at random from an existing set of objects, and returns the object formatted as JSON.  
 
 ```
   def single_query
@@ -107,6 +111,8 @@ This test loops on the same task that *single update* performs, retrieving and u
 ### Embedded Results
 
 Since the embedded tests rely on an existing parent object, each of these tests begins by retrieving a randomly chosen parent object from the datastore.
+
+#### In all graphs, the Y-axis represents "replies/second"
 
 #### embedded insert   
 This test inserts a new embedded object onto the retrieved parent object, persists the new object and returns a JSON representation of the new embedded object.    
