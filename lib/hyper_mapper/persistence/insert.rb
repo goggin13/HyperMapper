@@ -9,8 +9,8 @@ module HyperMapper
         return @space_name if @space_name
         @space_name = self.name.tableize
         if defined? Rails
-          prefix = "#{Rails.application.class.parent_name.downcase}_#{Rails.env}"
-          @space_name = "#{prefix}_space_name"
+          prefix = "#{Rails.application.class.parent_name.downcase}_#{Rails.env}" 
+          @space_name = "#{prefix}_#{@space_name}"
         end
         
         @space_name
