@@ -579,21 +579,23 @@ In order to facilitate creating tags, we'll add a text field to the post form, w
 `app/views/posts/_form.html.erb`
 
 ```
-  <div class="field">
-    <%= f.label :tag_string, "Comma delimited tags" %><br />
-    <%= f.text_field :tag_string, value: @post.tags_as_string %>
-  </div> 
+    <div class="field">
+        <%= f.label :tag_string, "Comma delimited tags" %><br />
+        <%= f.text_field :tag_string, value: @post.tags_as_string %>
+    </div> 
 ```
 
 We'll add the formatted tags to our post view as well:
 
-```app/views/posts/show.html.erb```
+```
+app/views/posts/show.html.erb
+```
 
 ```
-  <p>
-    <b>Content:</b>
-    <%= @post.tags_as_string %>
-  </p>
+    <p>
+        <b>Content:</b>
+        <%= @post.tags_as_string %>
+    </p>
 ```
 
 And whenever we save a Post object, we will look at the `:tag_string`, parse out the tags, 
