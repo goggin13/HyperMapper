@@ -6,7 +6,14 @@ module HyperMapper
       attr_writer :space_name      
       
       def space_name
-        @space_name ||= (defined? Rails) ? "#{Rails.env}_#{self.name.tableize}" : self.name.tableize
+        return @space_name if @space_name
+        @space_name = self.name.tableize
+        if defined? Rails
+          prefix = "#{Rails.application.class.parent_name.downcase}_#{Rails.env}"
+          @space_name = "#{prefix}_space_name"
+        end
+        
+        @space_name
       end
 
       def create(params={})
