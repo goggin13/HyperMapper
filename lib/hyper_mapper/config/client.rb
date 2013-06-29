@@ -1,3 +1,5 @@
+require 'yaml'
+
 begin
   require 'hyperclient'
 rescue LoadError
