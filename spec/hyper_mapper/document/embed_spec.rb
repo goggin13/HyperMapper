@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'HyperMapper::Document::Embed' do
-  
+
   before do
     @client = stub_client
     @attrs = {username: 'goggin13',
@@ -16,14 +16,14 @@ describe 'HyperMapper::Document::Embed' do
   end
 
   describe "embeds_many" do
-    
+
     it "should be a method on the class" do
       User.should respond_to :embeds_many
     end
-    
+
     it "embedded? should return false" do
       User.embedded?.should be_false
-    end    
+    end
 
     it "should add a plural function name to the parent object" do
       @user.should respond_to :posts
@@ -38,11 +38,11 @@ describe 'HyperMapper::Document::Embed' do
       posts[0].id.should == '1'
       posts[1].id.should == '2'
     end
-    
+
     it "should not mark the returned posts from new as persisted" do
       @user.posts.first.should_not be_persisted
     end
-    
+
     describe "from find" do
 
       before do
@@ -59,7 +59,7 @@ describe 'HyperMapper::Document::Embed' do
       end
 
       it "should set the id on the child objects" do
-        posts = @user.posts.to_a 
+        posts = @user.posts.to_a
         posts[0].id.should == '1'
         posts[1].id.should == '2'
       end
@@ -72,7 +72,7 @@ describe 'HyperMapper::Document::Embed' do
     it "should offer a find method" do
       @user.posts.find(2).title.should == 'Goodbye world'
     end
-    
+
     it "should return an empty array if no key for posts is returned" do
       stub_get 'users', 'test', {username: 'test', posts: ''}
       (User.find 'test').posts.length.should == 0
@@ -81,7 +81,7 @@ describe 'HyperMapper::Document::Embed' do
     it "should offer a create method" do
       @user.posts.should respond_to :create
     end
-    
+
     it "should create 2 posts for two subsequent create calls" do
       stub_map_add 'users', 'goggin13', {
         'posts' => { "4" => "{\"title\":\"test4\"}" }
@@ -95,7 +95,7 @@ describe 'HyperMapper::Document::Embed' do
   end
 
   describe "embedded_in" do
-    
+
     before do
       @post = @user.posts.first
     end
@@ -107,14 +107,14 @@ describe 'HyperMapper::Document::Embed' do
     it "embedded? should return true" do
       Post.embedded?.should be_true
     end
-      
+
     it "should add a singular function name to the child object" do
       @post.should respond_to :user
     end
 
     it "should add a parent functionto the child object" do
       @post.should respond_to :parent
-    end    
+    end
 
     it "should return the relevant user" do
       user = @post.user
@@ -135,10 +135,10 @@ describe 'HyperMapper::Document::Embed' do
       stub_any_put 'users', 'goggin13'
       user.save
       stub_auto_id_map_add 'users', user.username, 'posts', "{\"title\":\"test\"}"
-      post = user.posts.create! title: 'test22'
+      post = user.posts.create! title: 'test'
       post.should be_persisted
     end
-    
+
     it "should save the parent" do
       user = User.new(username: 'goggin13')
       stub_any_put 'users', 'goggin13'
@@ -158,5 +158,5 @@ describe 'HyperMapper::Document::Embed' do
         }.to change(@user.posts, :length).by(-1)
       end
     end
-  end  
+  end
 end
